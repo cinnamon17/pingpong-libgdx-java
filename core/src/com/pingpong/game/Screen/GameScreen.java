@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
     public void resume() {
 
         System.out.println("resume");
-        //music.play();
+        music.play();
     }
     @Override
     public void dispose() {
@@ -70,7 +70,7 @@ public class GameScreen implements Screen {
         game.batch.end();
 
         music.setLooping(true);
-        //music.play();
+        music.play();
 
         ball.checkColision(rectangle, rectangle.getX(), rectangle.getY());
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -92,6 +92,10 @@ public class GameScreen implements Screen {
 
             rectangle.setY(rectangle.getY() - 5);
 
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            this.game.setScreen(new MainTitleScreen(this.game));
         }
 
     }
