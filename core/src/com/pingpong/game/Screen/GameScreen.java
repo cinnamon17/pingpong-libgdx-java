@@ -26,34 +26,40 @@ public class GameScreen implements Screen {
         this.ball = new Ball(400, 5, 200, 5);
         camera.setToOrtho(false, 800, 480);
     }
+
     @Override
     public void resize(int width, int height) {
 
-        System.out.println("resize");
+        Gdx.app.log("GameScreen.java", "resize method");
     }
+
     @Override
     public void resume() {
 
-        System.out.println("resume");
+        Gdx.app.log("GameScreen.java", "resume method");
         music.play();
     }
+
     @Override
     public void dispose() {
 
         music.dispose();
 
     }
+
     @Override
     public void hide() {
 
-        System.out.println("hide");
+        Gdx.app.log("GameScreen.java", "hide");
     }
+
     @Override
     public void pause() {
 
-        System.out.println("pause");
+        Gdx.app.log("GameScreen.java", "pause");
 
     }
+
     @Override
     public void render(float delta) {
 
@@ -99,9 +105,10 @@ public class GameScreen implements Screen {
         }
 
     }
+
     @Override
     public void show() {
 
-        System.out.println("show");
+        Gdx.app.log("GameScreen.java", "show");
     }
 }

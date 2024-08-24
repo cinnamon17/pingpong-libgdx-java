@@ -20,29 +20,31 @@ import com.pingpong.game.Screen.GameScreen;
 
 public class MainTitleScreen implements Screen {
 
-    final GameHandler game;
-    OrthographicCamera camera;
-    Actor menuButton;
-    private Stage stage;
+	final GameHandler game;
+	OrthographicCamera camera;
+	Actor menuButton;
+	private Stage stage;
 
-    public MainTitleScreen(final GameHandler game) {
+	public MainTitleScreen(final GameHandler game) {
 
-        this.game = game;
+		this.game = game;
 
-        this.camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
-        stage = new Stage(new ScreenViewport());
-	Gdx.input.setInputProcessor(stage);
-    }
+		this.camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
+		stage = new Stage(new ScreenViewport());
+		Gdx.input.setInputProcessor(stage);
+	}
 
-    @Override
-    public void resize(int width, int height) {
-
-    }
-    @Override
-    public void pause() {
+	@Override
+	public void resize(int width, int height) {
 
 	}
+
+	@Override
+	public void pause() {
+
+	}
+
 	@Override
 	public void show() {
 
@@ -65,7 +67,7 @@ public class MainTitleScreen implements Screen {
 		newGame.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("new game button pressed");
+				Gdx.app.log("MainTitleScreen.java", "new game button pressed");
 				game.setScreen(new GameScreen(game));
 			}
 
@@ -73,8 +75,8 @@ public class MainTitleScreen implements Screen {
 		exit.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("exit button pressed");
-				Gdx.app.exit();				
+				Gdx.app.log("MainTitleScreen.java", "exit button pressed");
+				Gdx.app.exit();
 			}
 		});
 	}
@@ -88,15 +90,18 @@ public class MainTitleScreen implements Screen {
 		stage.draw();
 
 	}
+
 	@Override
 	public void hide() {
 
 	}
+
 	@Override
 	public void dispose() {
 
 		stage.dispose();
 	}
+
 	@Override
 	public void resume() {
 
