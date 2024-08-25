@@ -1,0 +1,103 @@
+package com.pingpong.game.Input;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
+import com.pingpong.game.GameHandler;
+import com.pingpong.game.Actor.Rectangle;
+
+/**
+ * Input handler for Rectangle
+ */
+public class RectangleInputProcessor implements InputProcessor {
+
+    private Rectangle rectangle;
+    private GameHandler game;
+
+    public RectangleInputProcessor(GameHandler game, Rectangle rectangle) {
+        this.game = game;
+        this.rectangle = rectangle;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        switch (keycode) {
+            case Keys.LEFT:
+                rectangle.setLeftMove(false);
+                Gdx.app.log("RectangleInputProcessor.java", "setleft move false");
+                break;
+            case Keys.RIGHT:
+                rectangle.setRightMove(false);
+                Gdx.app.log("RectangleInputProcessor.java", "setRight move false");
+                break;
+            case Keys.UP:
+                break;
+            case Keys.DOWN:
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+
+        switch (keycode) {
+            case Keys.LEFT:
+                rectangle.setLeftMove(true);
+                Gdx.app.log("RectangleInputProcessor.java", "setleft move true");
+                break;
+            case Keys.RIGHT:
+                rectangle.setRightMove(true);
+                Gdx.app.log("RectangleInputProcessor.java", "setRight move true");
+                break;
+            case Keys.UP:
+                break;
+            case Keys.DOWN:
+                break;
+            case Keys.ESCAPE:
+                this.game.setScreen(this.game.getMainTitleScreen());
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+}

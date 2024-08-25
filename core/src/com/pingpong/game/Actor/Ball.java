@@ -44,12 +44,7 @@ public class Ball {
 
     }
 
-    public void checkColision(Rectangle paddle, int xRectangle, int yRectangle) {
-
-        Gdx.app.log("Ball.java", "=================================================================");
-        Gdx.app.log("Ball.java", "Ball x: " + this.x + " Ball y: " + this.y);
-        Gdx.app.log("Ball.java", "Rectangle x: " + paddle.getX() + " Rectangle y: " + paddle.getY());
-        Gdx.app.log("Ball.java", "=================================================================");
+    public void checkColision(Rectangle paddle, float xRectangle, float yRectangle) {
 
         if (collidesWith(paddle, xRectangle, yRectangle)) {
 
@@ -60,7 +55,7 @@ public class Ball {
 
     }
 
-    private boolean collidesWith(Rectangle paddle, int xRectangle, int yRectangle) {
+    private boolean collidesWith(Rectangle paddle, float xRectangle, float yRectangle) {
 
         return paddle.getX() < this.x + ballTexture.getWidth() && paddle.getY() < this.y + ballTexture.getHeight()
                 && paddle.getX() + 200 > this.x && paddle.getY() + 83 > this.y;

@@ -1,7 +1,6 @@
 package com.pingpong.game.Screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -22,9 +21,9 @@ public class GameScreen implements Screen {
         this.game = game;
         this.music = Gdx.audio.newMusic(Gdx.files.internal("mainMusic.wav"));
         this.camera = new OrthographicCamera();
-        this.rectangle = new Rectangle(0, 0, 0, 0);
+        this.rectangle = new Rectangle(0, 0);
         this.ball = new Ball(400, 5, 200, 5);
-        camera.setToOrtho(false, 800, 480);
+        this.camera.setToOrtho(false, 800, 480);
     }
 
     @Override
@@ -42,14 +41,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
         music.dispose();
-
     }
 
     @Override
     public void hide() {
 
+        music.pause();
         Gdx.app.log("GameScreen.java", "hide");
     }
 
@@ -63,12 +61,12 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
         ball.update();
-        rectangle.update();
 
         game.batch.begin();
         rectangle.draw(game.batch);
@@ -78,31 +76,8 @@ public class GameScreen implements Screen {
         music.setLooping(true);
         music.play();
 
+        rectangle.update();
         ball.checkColision(rectangle, rectangle.getX(), rectangle.getY());
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-
-            rectangle.setX(rectangle.getX() - 5);
-
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-
-            rectangle.setY(rectangle.getY() + 5);
-
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-
-            rectangle.setX(rectangle.getX() + 5);
-
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-
-            rectangle.setY(rectangle.getY() - 5);
-
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            this.game.setScreen(new MainTitleScreen(this.game));
-        }
 
     }
 
@@ -110,5 +85,9 @@ public class GameScreen implements Screen {
     public void show() {
 
         Gdx.app.log("GameScreen.java", "show");
+    }
+
+    public Rectangle getRectangle() {
+        return this.rectangle;
     }
 }

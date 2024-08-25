@@ -1,13 +1,11 @@
 package com.pingpong.game.Screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.pingpong.game.GameHandler;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Align;
+import com.pingpong.game.Input.RectangleInputProcessor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -16,41 +14,49 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.pingpong.game.Screen.GameScreen;
 
 public class MainTitleScreen implements Screen {
 
 	final GameHandler game;
-	OrthographicCamera camera;
-	Actor menuButton;
+	private OrthographicCamera camera;
 	private Stage stage;
+	private GameScreen gameScreen;
+	private InputMultiplexer inputMultiplexer;
+	private RectangleInputProcessor rectangleInputProcessor;
 
 	public MainTitleScreen(final GameHandler game) {
 
 		this.game = game;
-
 		this.camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
-		stage = new Stage(new ScreenViewport());
-		Gdx.input.setInputProcessor(stage);
+		this.camera.setToOrtho(false, 800, 480);
+		this.stage = new Stage(new ScreenViewport());
+		this.gameScreen = new GameScreen(game);
+		this.rectangleInputProcessor = new RectangleInputProcessor(game, this.gameScreen.getRectangle());
+		this.inputMultiplexer = new InputMultiplexer();
+		this.inputMultiplexer.addProcessor(this.stage);
+		this.inputMultiplexer.addProcessor(this.rectangleInputProcessor);
+		Gdx.input.setInputProcessor(this.inputMultiplexer);
+
 	}
 
 	@Override
 	public void resize(int width, int height) {
 
+		Gdx.app.log("MainTitleScreen.java", "resize method");
 	}
 
 	@Override
 	public void pause() {
 
+		Gdx.app.log("MainTitleScreen.java", "pause method");
 	}
 
 	@Override
 	public void show() {
 
+		Gdx.app.log("MainTitleScreen.java", "show method");
 		Table table = new Table();
 		table.setFillParent(true);
-		table.setDebug(true);
 		stage.addActor(table);
 		Skin skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
@@ -68,7 +74,7 @@ public class MainTitleScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.log("MainTitleScreen.java", "new game button pressed");
-				game.setScreen(new GameScreen(game));
+				game.setScreen(gameScreen);
 			}
 
 		});
@@ -86,7 +92,6 @@ public class MainTitleScreen implements Screen {
 		// clear the screen ready for next set of images to be drawn
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
 	}
@@ -94,16 +99,19 @@ public class MainTitleScreen implements Screen {
 	@Override
 	public void hide() {
 
+		Gdx.app.log("MainTitleScreen.java", "hide method");
 	}
 
 	@Override
 	public void dispose() {
 
+		Gdx.app.log("MainTitleScreen.java", "dispose method");
 		stage.dispose();
 	}
 
 	@Override
 	public void resume() {
 
+		Gdx.app.log("MainTitleScreen.java", "resume method");
 	}
 }

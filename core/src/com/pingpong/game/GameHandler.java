@@ -9,21 +9,25 @@ public class GameHandler extends Game {
 
     public SpriteBatch batch;
     public BitmapFont font;
+    public MainTitleScreen mainTitleScreen;
 
     public void create() {
 
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-        this.setScreen(new MainTitleScreen(this));
+        this.batch = new SpriteBatch();
+        this.font = new BitmapFont();
+        this.mainTitleScreen = new MainTitleScreen(this);
+        this.setScreen(mainTitleScreen);
+    }
+
+    public MainTitleScreen getMainTitleScreen() {
+        return this.mainTitleScreen;
     }
 
     public void render() {
-
         super.render();
     }
 
     public void dispose() {
-
         batch.dispose();
         font.dispose();
     }

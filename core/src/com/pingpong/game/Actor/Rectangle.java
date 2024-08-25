@@ -1,5 +1,5 @@
 
-package  com.pingpong.game.Actor;
+package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -8,45 +8,28 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Rectangle {
 
-    private int x;
-    private int speedX;
-    private int y;
-    private int speedY;
+    private float x;
+    private float y;
     private Texture ballTexture;
     private Color color;
+    private boolean leftMove;
+    private boolean rightMove;
 
-    public Rectangle(int x, int speedX, int y,int speedY ) {
+    public Rectangle(int x, int y) {
 
         this.x = x;
-        this.speedX = speedX;
         this.y = y;
-        this.speedY = speedY;
         this.ballTexture = new Texture(Gdx.files.internal("rectangle.png"));
         this.color = Color.WHITE;
     }
 
     public void update() {
 
-
-        x += speedX;
-        y += speedY;
-
-        if (x <= 0) {
-
-            this.setX(0);
+        if (leftMove) {
+            this.x -= 200 * Gdx.graphics.getDeltaTime();
         }
-        if (x >= Gdx.graphics.getWidth() - 200) {
-
-            this.setX(Gdx.graphics.getWidth() - 200 );
-        }
-
-        if (y <= 0 ) {
-            this.setY(0);
-        }
-
-        if (y >= Gdx.graphics.getHeight() - 83) {
-
-            this.setY(Gdx.graphics.getHeight() - 83);
+        if (rightMove) {
+            this.x += 200 * Gdx.graphics.getDeltaTime();
         }
     }
 
@@ -59,34 +42,35 @@ public class Rectangle {
 
     public void checkColision(Texture paddle, int xRectangle, int yRectangle) {
 
-         if(collidesWith(paddle, xRectangle, yRectangle)){
+        if (collidesWith(paddle, xRectangle, yRectangle)) {
             color = Color.GREEN;
-        }
-        else{
+        } else {
             color = Color.WHITE;
         }
 
     }
 
-     private boolean collidesWith(Texture paddle, int xRectangle, int yRectangle) {
+    private boolean collidesWith(Texture paddle, int xRectangle, int yRectangle) {
 
-         if (paddle.getWidth() == this.y) {
+        if (paddle.getWidth() == this.y) {
 
             return true;
-         }
-         return false;
+        }
+        return false;
     }
 
-    public int getX() {
+    public float getX() {
 
         return this.x;
 
     }
-    public int getY() {
+
+    public float getY() {
 
         return this.y;
 
     }
+
     public void setX(int x) {
         this.x = x;
     }
@@ -95,4 +79,15 @@ public class Rectangle {
         this.y = y;
     }
 
+    public void setLeftMove(boolean t) {
+        if (rightMove && t)
+            rightMove = false;
+        leftMove = t;
+    }
+
+    public void setRightMove(boolean t) {
+        if (leftMove && t)
+            leftMove = false;
+        rightMove = t;
+    }
 }
