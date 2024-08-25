@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Ball {
 
     private int x;
-    private int speedX;
+    private float speedX;
     private int y;
-    private int speedY;
+    private float speedY;
     private Texture ballTexture;
     private Color color;
 
@@ -30,10 +30,10 @@ public class Ball {
         y += speedY;
 
         if (x <= 0 || x >= Gdx.graphics.getWidth() - 20) {
-            speedX = -speedX;
+            speedX = -speedX + 10 * Gdx.graphics.getDeltaTime();
         }
         if (y <= 0 || y >= Gdx.graphics.getHeight() - 20) {
-            speedY = -speedY;
+            speedY = -speedY + 10 * Gdx.graphics.getDeltaTime();
         }
     }
 
@@ -48,11 +48,19 @@ public class Ball {
 
         if (collidesWith(paddle, xRectangle, yRectangle)) {
 
-            this.speedY = -speedY;
-        } else {
-            color = Color.WHITE;
-        }
+            Gdx.app.log("Ball.java", "collision!");
+            if (this.y >= 80) {
+                this.speedY = -speedY + 10 * Gdx.graphics.getDeltaTime();
+            }
 
+            Gdx.app.log("Ball.java", "xRectangle: " + xRectangle + " yRectangle: " + yRectangle);
+            Gdx.app.log("Ball.java", "xball: " + this.x + " yball: " + this.y + "ballSpeedX :" + this.speedX
+                    + "ballSpeedY :" + this.speedY);
+
+            if (this.y <= 79) {
+                this.speedX = -speedX + 10 * Gdx.graphics.getDeltaTime();
+            }
+        }
     }
 
     private boolean collidesWith(Rectangle paddle, float xRectangle, float yRectangle) {
