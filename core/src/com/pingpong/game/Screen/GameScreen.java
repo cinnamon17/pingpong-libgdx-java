@@ -1,5 +1,8 @@
 package com.pingpong.game.Screen;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -24,6 +27,12 @@ public class GameScreen implements Screen {
         this.rectangle = new Rectangle(0, 0);
         this.ball = new Ball(400, 5, 200, 5);
         this.camera.setToOrtho(false, 800, 480);
+    }
+
+    @Override
+    public void show() {
+
+        Gdx.app.log("GameScreen.java", "show");
     }
 
     @Override
@@ -79,12 +88,6 @@ public class GameScreen implements Screen {
         rectangle.update();
         ball.checkColision(rectangle, rectangle.getX(), rectangle.getY());
 
-    }
-
-    @Override
-    public void show() {
-
-        Gdx.app.log("GameScreen.java", "show");
     }
 
     public Rectangle getRectangle() {
