@@ -2,13 +2,17 @@ package com.pingpong.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.pingpong.game.Actor.Ball;
 import com.pingpong.game.Actor.Rectangle;
+import com.pingpong.game.Input.RectangleInputProcessor;
 import com.pingpong.game.Screen.GameScreen;
 import com.pingpong.game.Screen.MainTitleScreen;
 
@@ -20,6 +24,9 @@ public class GameHandler extends Game {
     private OrthographicCamera camera;
     private GameScreen gameScreen;
     private Music music;
+    private Stage mainTitleStage;
+    private RectangleInputProcessor rectangleInputProcessor;
+    private InputMultiplexer inputMultiplexer;
 
     public void create() {
 
@@ -29,8 +36,15 @@ public class GameHandler extends Game {
         this.camera.setToOrtho(false, 800, 480);
         this.gameScreen = new GameScreen(this);
         this.mainTitleScreen = new MainTitleScreen(this);
-        this.setScreen(mainTitleScreen);
         this.music = Gdx.audio.newMusic(Gdx.files.internal("mainMusic.wav"));
+        this.mainTitleStage = new Stage(new ScreenViewport());
+        this.rectangleInputProcessor = new RectangleInputProcessor(this,
+                this.getGameScreen().getRectangle());
+        this.inputMultiplexer = new InputMultiplexer();
+        this.inputMultiplexer.addProcessor(this.getMainTitleStage());
+        this.inputMultiplexer.addProcessor(this.rectangleInputProcessor);
+        Gdx.input.setInputProcessor(this.inputMultiplexer);
+        this.setScreen(mainTitleScreen);
     }
 
     public MainTitleScreen getMainTitleScreen() {
@@ -39,6 +53,10 @@ public class GameHandler extends Game {
 
     public GameScreen getGameScreen() {
         return this.gameScreen;
+    }
+
+    public Stage getMainTitleStage() {
+        return this.mainTitleStage;
     }
 
     public void render() {
