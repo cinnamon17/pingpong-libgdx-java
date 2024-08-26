@@ -2,16 +2,13 @@
 package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Rectangle {
 
     private float x;
     private float y;
-    private Texture ballTexture;
-    private Color color;
+    private Texture texture;
     private boolean leftMove;
     private boolean rightMove;
 
@@ -19,8 +16,7 @@ public class Rectangle {
 
         this.x = x;
         this.y = y;
-        this.ballTexture = new Texture(Gdx.files.internal("rectangle.png"));
-        this.color = Color.WHITE;
+        this.texture = new Texture(Gdx.files.internal("rectangle.png"));
     }
 
     public void update() {
@@ -33,30 +29,16 @@ public class Rectangle {
         }
     }
 
-    public void draw(SpriteBatch batch) {
-
-        batch.setColor(color);
-        batch.draw(ballTexture, x, y);
-
+    public void setLeftMove(boolean t) {
+        if (rightMove && t)
+            rightMove = false;
+        leftMove = t;
     }
 
-    public void checkColision(Texture paddle, int xRectangle, int yRectangle) {
-
-        if (collidesWith(paddle, xRectangle, yRectangle)) {
-            color = Color.GREEN;
-        } else {
-            color = Color.WHITE;
-        }
-
-    }
-
-    private boolean collidesWith(Texture paddle, int xRectangle, int yRectangle) {
-
-        if (paddle.getWidth() == this.y) {
-
-            return true;
-        }
-        return false;
+    public void setRightMove(boolean t) {
+        if (leftMove && t)
+            leftMove = false;
+        rightMove = t;
     }
 
     public float getX() {
@@ -79,15 +61,11 @@ public class Rectangle {
         this.y = y;
     }
 
-    public void setLeftMove(boolean t) {
-        if (rightMove && t)
-            rightMove = false;
-        leftMove = t;
+    public Texture getTexture() {
+        return this.texture;
     }
 
-    public void setRightMove(boolean t) {
-        if (leftMove && t)
-            leftMove = false;
-        rightMove = t;
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 }

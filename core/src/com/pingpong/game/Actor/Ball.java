@@ -1,9 +1,7 @@
 package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Ball {
 
@@ -11,17 +9,15 @@ public class Ball {
     private float speedX;
     private int y;
     private float speedY;
-    private Texture ballTexture;
-    private Color color;
+    private Texture texture;
 
-    public Ball(int x, int speedX, int y, int speedY) {
+    public Ball(int x, int y) {
 
         this.x = x;
-        this.speedX = speedX;
+        this.speedX = 5;
         this.y = y;
-        this.speedY = speedY;
-        this.ballTexture = new Texture(Gdx.files.internal("ball.png"));
-        this.color = Color.WHITE;
+        this.speedY = 5;
+        this.texture = new Texture(Gdx.files.internal("ball.png"));
     }
 
     public void update() {
@@ -37,23 +33,16 @@ public class Ball {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    public void checkColision(Rectangle paddle) {
 
-        batch.setColor(color);
-        batch.draw(ballTexture, x, y);
-
-    }
-
-    public void checkColision(Rectangle paddle, float xRectangle, float yRectangle) {
-
-        if (collidesWith(paddle, xRectangle, yRectangle)) {
+        if (collidesWith(paddle)) {
 
             Gdx.app.log("Ball.java", "collision!");
             if (this.y >= 80) {
                 this.speedY = -speedY + 10 * Gdx.graphics.getDeltaTime();
             }
 
-            Gdx.app.log("Ball.java", "xRectangle: " + xRectangle + " yRectangle: " + yRectangle);
+            Gdx.app.log("Ball.java", "xRectangle: " + paddle.getX() + " yRectangle: " + paddle.getY());
             Gdx.app.log("Ball.java", "xball: " + this.x + " yball: " + this.y + "ballSpeedX :" + this.speedX
                     + "ballSpeedY :" + this.speedY);
 
@@ -63,9 +52,9 @@ public class Ball {
         }
     }
 
-    private boolean collidesWith(Rectangle paddle, float xRectangle, float yRectangle) {
+    private boolean collidesWith(Rectangle paddle) {
 
-        return paddle.getX() < this.x + ballTexture.getWidth() && paddle.getY() < this.y + ballTexture.getHeight()
+        return paddle.getX() < this.x + texture.getWidth() && paddle.getY() < this.y + texture.getHeight()
                 && paddle.getX() + 200 > this.x && paddle.getY() + 83 > this.y;
 
     }
@@ -88,6 +77,14 @@ public class Ball {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public Texture getTexture() {
+        return this.texture;
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
 }
