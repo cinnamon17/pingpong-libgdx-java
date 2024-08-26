@@ -15,6 +15,7 @@ import com.pingpong.game.Actor.Rectangle;
 import com.pingpong.game.Input.RectangleInputProcessor;
 import com.pingpong.game.Screen.GameScreen;
 import com.pingpong.game.Screen.MainTitleScreen;
+import com.pingpong.game.Widget.MainTitleMenuButton;
 
 public class GameHandler extends Game {
 
@@ -27,6 +28,7 @@ public class GameHandler extends Game {
     private Stage mainTitleStage;
     private RectangleInputProcessor rectangleInputProcessor;
     private InputMultiplexer inputMultiplexer;
+    private MainTitleMenuButton mainTitleMenuButton;
 
     public void create() {
 
@@ -44,6 +46,7 @@ public class GameHandler extends Game {
         this.inputMultiplexer.addProcessor(this.getMainTitleStage());
         this.inputMultiplexer.addProcessor(this.rectangleInputProcessor);
         Gdx.input.setInputProcessor(this.inputMultiplexer);
+        this.mainTitleMenuButton = new MainTitleMenuButton(this);
         this.setScreen(mainTitleScreen);
     }
 
@@ -57,6 +60,10 @@ public class GameHandler extends Game {
 
     public Stage getMainTitleStage() {
         return this.mainTitleStage;
+    }
+
+    public MainTitleMenuButton getMainTitleMenuButton() {
+        return this.mainTitleMenuButton;
     }
 
     public void render() {
@@ -119,5 +126,17 @@ public class GameHandler extends Game {
 
     public void batchDrawBall(Ball ball) {
         this.getBatch().draw(ball.getTexture(), ball.getX(), ball.getY());
+    }
+
+    public void stageDraw() {
+        this.mainTitleStage.draw();
+    }
+
+    public void stageDispose() {
+        this.mainTitleStage.dispose();
+    }
+
+    public void createMainTitleButtons() {
+        this.mainTitleMenuButton.create();
     }
 }
