@@ -7,7 +7,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.pingpong.game.Actor.Ball;
@@ -29,6 +31,9 @@ public class GameHandler extends Game {
     private RectangleInputProcessor rectangleInputProcessor;
     private InputMultiplexer inputMultiplexer;
     private MainTitleMenuButton mainTitleMenuButton;
+    private TextureAtlas atlas;
+    private Sprite rectangleSprite;
+    private Sprite ballSprite;
 
     public void create() {
 
@@ -47,6 +52,9 @@ public class GameHandler extends Game {
         this.inputMultiplexer.addProcessor(this.rectangleInputProcessor);
         Gdx.input.setInputProcessor(this.inputMultiplexer);
         this.mainTitleMenuButton = new MainTitleMenuButton(this);
+        this.atlas = new TextureAtlas(Gdx.files.internal("ping_pong.atlas"));
+        this.rectangleSprite = this.atlas.createSprite("paddleRed");
+        this.ballSprite = this.atlas.createSprite("ballBlue");
         this.setScreen(mainTitleScreen);
     }
 
@@ -80,11 +88,11 @@ public class GameHandler extends Game {
     }
 
     public void batchBegin() {
-        this.getBatch().begin();
+        this.batch.begin();
     }
 
     public void batchEnd() {
-        this.getBatch().end();
+        this.batch.end();
     }
 
     public void clearScreen() {
@@ -117,15 +125,15 @@ public class GameHandler extends Game {
     }
 
     public void setProjectionMatrixCombined() {
-        this.getBatch().setProjectionMatrix(this.getCamera().combined);
+        this.batch.setProjectionMatrix(this.getCamera().combined);
     }
 
     public void batchDrawRectangle(Rectangle rectangle) {
-        this.getBatch().draw(rectangle.getTexture(), rectangle.getX(), rectangle.getY());
+        this.batch.draw(this.rectangleSprite, rectangle.getX(), rectangle.getY());
     }
 
     public void batchDrawBall(Ball ball) {
-        this.getBatch().draw(ball.getTexture(), ball.getX(), ball.getY());
+        this.batch.draw(this.ballSprite, ball.getX(), ball.getY());
     }
 
     public void stageDraw() {

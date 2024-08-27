@@ -2,21 +2,20 @@
 package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 
 public class Rectangle {
 
     private float x;
     private float y;
-    private Texture texture;
     private boolean leftMove;
     private boolean rightMove;
+    final private float width = 104;
+    final private float height = 24;
 
     public Rectangle(int x, int y) {
 
         this.x = x;
         this.y = y;
-        this.texture = new Texture(Gdx.files.internal("rectangle.png"));
     }
 
     public void update() {
@@ -42,15 +41,11 @@ public class Rectangle {
     }
 
     public float getX() {
-
         return this.x;
-
     }
 
     public float getY() {
-
         return this.y;
-
     }
 
     public void setX(int x) {
@@ -61,11 +56,19 @@ public class Rectangle {
         this.y = y;
     }
 
-    public Texture getTexture() {
-        return this.texture;
+    public float getWidth() {
+        return this.width;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
+    public float getHeight() {
+        return this.height;
+    }
+
+    public boolean isLeftMoved() {
+        return this.leftMove;
+    }
+
+    public boolean isRightMoved() {
+        return this.rightMove;
     }
 }

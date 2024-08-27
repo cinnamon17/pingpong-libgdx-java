@@ -24,11 +24,9 @@ public class RectangleInputProcessor implements InputProcessor {
         switch (keycode) {
             case Keys.LEFT:
                 rectangle.setLeftMove(false);
-                Gdx.app.log("RectangleInputProcessor.java", "setleft move false");
                 break;
             case Keys.RIGHT:
                 rectangle.setRightMove(false);
-                Gdx.app.log("RectangleInputProcessor.java", "setRight move false");
                 break;
             case Keys.UP:
                 break;
@@ -46,11 +44,9 @@ public class RectangleInputProcessor implements InputProcessor {
         switch (keycode) {
             case Keys.LEFT:
                 rectangle.setLeftMove(true);
-                Gdx.app.log("RectangleInputProcessor.java", "setleft move true");
                 break;
             case Keys.RIGHT:
                 rectangle.setRightMove(true);
-                Gdx.app.log("RectangleInputProcessor.java", "setRight move true");
                 break;
             case Keys.UP:
                 break;

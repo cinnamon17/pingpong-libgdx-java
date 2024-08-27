@@ -1,74 +1,86 @@
 package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 
 public class Ball {
 
-    private int x;
+    private float x;
     private float speedX;
-    private int y;
+    private float y;
     private float speedY;
-    private Texture texture;
+    final private float height = 22;
+    final private float width = 22;
 
-    public Ball(int x, int y) {
+    public Ball(float x, float y) {
 
         this.x = x;
-        this.speedX = 5;
+        this.speedX = 300;
         this.y = y;
-        this.speedY = 5;
-        this.texture = new Texture(Gdx.files.internal("ball.png"));
+        this.speedY = 300;
     }
 
     public void update() {
+        // Update ball position
+        x += speedX * Gdx.graphics.getDeltaTime();
+        y += speedY * Gdx.graphics.getDeltaTime();
 
-        x += speedX;
-        y += speedY;
-
+        // Screen boundary collision detection
         if (x <= 0 || x >= Gdx.graphics.getWidth() - 20) {
-            speedX = -speedX + 10 * Gdx.graphics.getDeltaTime();
+            speedX = -speedX;
         }
         if (y <= 0 || y >= Gdx.graphics.getHeight() - 20) {
-            speedY = -speedY + 10 * Gdx.graphics.getDeltaTime();
+            speedY = -speedY;
         }
     }
 
     public void checkColision(Rectangle paddle) {
 
         if (collidesWith(paddle)) {
-
             Gdx.app.log("Ball.java", "collision!");
-            if (this.y >= 80) {
-                this.speedY = -speedY + 10 * Gdx.graphics.getDeltaTime();
+
+            // Handle horizontal collision
+            if (this.x + this.width > paddle.getX() && this.x < paddle.getX() + paddle.getWidth()) {
+                speedY = -speedY;
+
+                // Adjust ball position to be outside of the paddle to prevent sticking
+                if (this.y > paddle.getY()) {
+                    this.y = paddle.getY() + paddle.getHeight();
+                } else {
+                    this.y = paddle.getY() - this.height;
+                }
+            }
+
+            // Handle vertical collision (sides of the paddle)
+            if (this.y + this.height > paddle.getY() && this.y < paddle.getY() + paddle.getHeight()) {
+                speedX = -speedX;
+
+                // Adjust ball position to be outside of the paddle to prevent sticking
+                if (this.x > paddle.getX()) {
+                    this.x = paddle.getX() + paddle.getWidth();
+                } else {
+                    this.x = paddle.getX() - this.width;
+                }
             }
 
             Gdx.app.log("Ball.java", "xRectangle: " + paddle.getX() + " yRectangle: " + paddle.getY());
-            Gdx.app.log("Ball.java", "xball: " + this.x + " yball: " + this.y + "ballSpeedX :" + this.speedX
-                    + "ballSpeedY :" + this.speedY);
-
-            if (this.y <= 79) {
-                this.speedX = -speedX + 10 * Gdx.graphics.getDeltaTime();
-            }
+            Gdx.app.log("Ball.java", "xball: " + this.x + " yball: " + this.y + "ballSpeedX: " + this.speedX
+                    + " ballSpeedY: " + this.speedY);
         }
     }
 
     private boolean collidesWith(Rectangle paddle) {
 
-        return paddle.getX() < this.x + texture.getWidth() && paddle.getY() < this.y + texture.getHeight()
-                && paddle.getX() + 200 > this.x && paddle.getY() + 83 > this.y;
+        return paddle.getX() < this.x + this.width && paddle.getY() < this.y + this.height
+                && paddle.getX() + paddle.getWidth() > this.x && paddle.getY() + paddle.getHeight() > this.y;
 
     }
 
-    public int getX() {
-
+    public float getX() {
         return this.x;
-
     }
 
-    public int getY() {
-
+    public float getY() {
         return this.y;
-
     }
 
     public void setX(int x) {
@@ -79,12 +91,11 @@ public class Ball {
         this.y = y;
     }
 
-    public Texture getTexture() {
-        return this.texture;
+    public float getWidth() {
+        return this.width;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
+    public float getHeight() {
+        return this.height;
     }
-
 }
