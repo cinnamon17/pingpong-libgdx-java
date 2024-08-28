@@ -16,6 +16,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.rectangle = new Rectangle(0, 0);
         this.ball = new Ball(400, 200);
+        this.ball.setPaddle(this.rectangle);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class GameScreen implements Screen {
         game.batchDrawBall(ball);
         game.batchEnd();
 
-        ball.checkColision(rectangle);
+        ball.checkColision();
 
     }
 
