@@ -1,34 +1,33 @@
 package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 public class Ball {
 
-    private float x;
     private float speedX;
-    private float y;
+    private Vector2 ballVector;
     private float speedY;
     final private float height = 22;
     final private float width = 22;
 
     public Ball(float x, float y) {
 
-        this.x = x;
         this.speedX = 300;
-        this.y = y;
         this.speedY = 300;
+        this.ballVector = new Vector2(x, y);
     }
 
     public void update() {
         // Update ball position
-        x += speedX * Gdx.graphics.getDeltaTime();
-        y += speedY * Gdx.graphics.getDeltaTime();
+        this.ballVector.x += speedX * Gdx.graphics.getDeltaTime();
+        this.ballVector.y += speedY * Gdx.graphics.getDeltaTime();
 
         // Screen boundary collision detection
-        if (x <= 0 || x >= Gdx.graphics.getWidth() - 20) {
+        if (this.ballVector.x <= 0 || this.ballVector.x >= Gdx.graphics.getWidth() - 20) {
             speedX = -speedX;
         }
-        if (y <= 0 || y >= Gdx.graphics.getHeight() - 20) {
+        if (this.ballVector.y <= 0 || this.ballVector.y >= Gdx.graphics.getHeight() - 20) {
             speedY = -speedY;
         }
     }
@@ -38,57 +37,77 @@ public class Ball {
         if (collidesWith(paddle)) {
             Gdx.app.log("Ball.java", "collision!");
 
-            // Handle horizontal collision
-            if (this.x + this.width > paddle.getX() && this.x < paddle.getX() + paddle.getWidth()) {
-                speedY = -speedY;
-
-                // Adjust ball position to be outside of the paddle to prevent sticking
-                if (this.y > paddle.getY()) {
-                    this.y = paddle.getY() + paddle.getHeight();
-                } else {
-                    this.y = paddle.getY() - this.height;
-                }
-            }
-
-            // Handle vertical collision (sides of the paddle)
-            if (this.y + this.height > paddle.getY() && this.y < paddle.getY() + paddle.getHeight()) {
-                speedX = -speedX;
-
-                // Adjust ball position to be outside of the paddle to prevent sticking
-                if (this.x > paddle.getX()) {
-                    this.x = paddle.getX() + paddle.getWidth();
-                } else {
-                    this.x = paddle.getX() - this.width;
-                }
-            }
+            this.handleHorizontalCollision(paddle);
+            // Posibly eliminate this method TODO
+            // this.handleVerticalCollision(paddle);
 
             Gdx.app.log("Ball.java", "xRectangle: " + paddle.getX() + " yRectangle: " + paddle.getY());
-            Gdx.app.log("Ball.java", "xball: " + this.x + " yball: " + this.y + "ballSpeedX: " + this.speedX
-                    + " ballSpeedY: " + this.speedY);
+            Gdx.app.log("Ball.java",
+                    "xball: " + this.ballVector.x + " yball: " + this.ballVector.y + "ballSpeedX: " + this.speedX
+                            + " ballSpeedY: " + this.speedY);
         }
     }
 
     private boolean collidesWith(Rectangle paddle) {
 
-        return paddle.getX() < this.x + this.width && paddle.getY() < this.y + this.height
-                && paddle.getX() + paddle.getWidth() > this.x && paddle.getY() + paddle.getHeight() > this.y;
+        return paddle.getX() < this.ballVector.x + this.width && paddle.getY() < this.ballVector.y + this.height
+                && paddle.getX() + paddle.getWidth() > this.ballVector.x
+                && paddle.getY() + paddle.getHeight() > this.ballVector.y;
+
+    }
+
+    public void handleHorizontalCollision(Rectangle paddle) {
+
+        // Handle horizontal collision
+        if (this.ballVector.x + this.width > paddle.getX() && this.ballVector.x < paddle.getX() + paddle.getWidth()) {
+
+            Gdx.app.log("Ball.java", "horizontal collision");
+            if (this.ballVector.x + this.width - paddle.getX() < 40) {
+
+                Gdx.app.log("Ball.java", "left side");
+                speedX = -300;
+                speedY = -speedY;
+            }
+
+            if (this.ballVector.x + this.width - paddle.getX() > 80) {
+
+                Gdx.app.log("Ball.java", "right side");
+                speedX = 300;
+                speedY = -speedY;
+            }
+
+            if (this.ballVector.x + this.width - paddle.getX() > 40
+                    && this.ballVector.x + this.width - paddle.getX() < 80) {
+
+                Gdx.app.log("Ball.java", "center side");
+                speedX = 0;
+                speedY = -speedY;
+            }
+
+            // Adjust ball position to be outside of the paddle to prevent sticking
+            if (this.ballVector.y > paddle.getY()) {
+                Gdx.app.log("Ball.java", "adjust ball to prevent sticking");
+                this.ballVector.y = paddle.getY() + paddle.getHeight();
+                Gdx.app.log("Ball.java", "angle: " + this.ballVector.angleDeg());
+            }
+        }
 
     }
 
     public float getX() {
-        return this.x;
+        return this.ballVector.x;
     }
 
     public float getY() {
-        return this.y;
+        return this.ballVector.y;
     }
 
     public void setX(int x) {
-        this.x = x;
+        this.ballVector.x = x;
     }
 
     public void setY(int y) {
-        this.y = y;
+        this.ballVector.y = y;
     }
 
     public float getWidth() {

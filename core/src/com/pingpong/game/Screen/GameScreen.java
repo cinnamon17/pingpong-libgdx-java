@@ -30,6 +30,7 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
 
         Gdx.app.log("GameScreen.java", "resize method");
+        Gdx.app.log("GameScreen.java", "width: " + width + " Height: " + height);
     }
 
     @Override
@@ -67,6 +68,7 @@ public class GameScreen implements Screen {
         rectangle.update();
 
         game.batchBegin();
+        game.batchDrawBackground();
         game.batchDrawRectangle(rectangle);
         game.batchDrawBall(ball);
         game.batchEnd();

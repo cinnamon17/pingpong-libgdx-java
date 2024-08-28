@@ -34,6 +34,7 @@ public class GameHandler extends Game {
     private TextureAtlas atlas;
     private Sprite rectangleSprite;
     private Sprite ballSprite;
+    private Sprite backgroundSprite;
 
     public void create() {
 
@@ -55,6 +56,7 @@ public class GameHandler extends Game {
         this.atlas = new TextureAtlas(Gdx.files.internal("ping_pong.atlas"));
         this.rectangleSprite = this.atlas.createSprite("paddleRed");
         this.ballSprite = this.atlas.createSprite("ballBlue");
+        this.backgroundSprite = this.atlas.createSprite("background");
         this.setScreen(mainTitleScreen);
     }
 
@@ -134,6 +136,10 @@ public class GameHandler extends Game {
 
     public void batchDrawBall(Ball ball) {
         this.batch.draw(this.ballSprite, ball.getX(), ball.getY());
+    }
+
+    public void batchDrawBackground() {
+        this.batch.draw(this.backgroundSprite, 0, 0);
     }
 
     public void stageDraw() {
