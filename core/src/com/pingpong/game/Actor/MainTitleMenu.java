@@ -1,4 +1,4 @@
-package com.pingpong.game.Widget;
+package com.pingpong.game.Actor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +20,7 @@ import com.pingpong.game.GameHandler;
 /**
  * Menu buttons items
  */
-public class MainTitleMenuButton {
+public class MainTitleMenu {
 
 	private Table table;
 	private TextButton newGame;
@@ -30,13 +30,13 @@ public class MainTitleMenuButton {
 	private Skin skin;
 	private GameHandler game;
 
-	public MainTitleMenuButton(final GameHandler game) {
+	public MainTitleMenu(final GameHandler game) {
 
 		this.game = game;
 
 		this.table = new Table();
 		this.table.setFillParent(true);
-		this.game.getMainTitleStage().addActor(table);
+		this.game.getStage().addActor(table);
 		this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
 		this.newGame = new TextButton("Start/Resume", this.skin);
@@ -55,6 +55,7 @@ public class MainTitleMenuButton {
 
 	public void create() {
 
+		this.table.setVisible(true);
 		this.newGame.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -120,5 +121,9 @@ public class MainTitleMenuButton {
 				Gdx.app.exit();
 			}
 		});
+	}
+
+	public void removeEventListeners() {
+		this.table.setVisible(false);
 	}
 }

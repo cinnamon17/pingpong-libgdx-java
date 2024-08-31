@@ -4,7 +4,7 @@ package com.pingpong.game.Actor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
-public class Rectangle {
+public class Paddle {
 
     private Vector2 rectangleVector;
     private boolean leftMove;
@@ -12,7 +12,7 @@ public class Rectangle {
     final private float WIDTH = 104;
     final private float HEIGHT = 24;
 
-    public Rectangle(int x, int y) {
+    public Paddle(int x, int y) {
 
         this.rectangleVector = new Vector2(x, y);
     }

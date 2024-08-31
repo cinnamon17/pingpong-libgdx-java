@@ -25,7 +25,7 @@ public class MainTitleScreen implements Screen {
 	@Override
 	public void show() {
 
-		this.game.createMainTitleButtons();
+		this.game.createMainTitleButtonsEventListeners();
 		Gdx.app.log("MainTitleScreen.java", "show method");
 	}
 
@@ -38,6 +38,7 @@ public class MainTitleScreen implements Screen {
 	@Override
 	public void hide() {
 		Gdx.app.log("MainTitleScreen.java", "hide method");
+		this.game.removeMainTitleButtonsEventListeners();
 	}
 
 	@Override

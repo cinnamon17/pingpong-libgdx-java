@@ -4,17 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.pingpong.game.GameHandler;
 import com.pingpong.game.Actor.Ball;
-import com.pingpong.game.Actor.Rectangle;
+import com.pingpong.game.Actor.Paddle;
+import com.pingpong.game.Actor.Score;
 
 public class GameScreen implements Screen {
     private final GameHandler game;
-    private Rectangle rectangle;
+    private Paddle rectangle;
     private Ball ball;
+    private Score score;
 
     public GameScreen(final GameHandler game) {
 
         this.game = game;
-        this.rectangle = new Rectangle(0, 0);
+        this.rectangle = new Paddle(0, 0);
         this.ball = new Ball(400, 200);
         this.ball.setPaddle(this.rectangle);
     }
@@ -22,9 +24,13 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
 
+        this.score = new Score(game);
         Gdx.app.log("GameScreen.java", "show");
         game.setMusicLooping(true);
         game.musicPlay();
+        this.score.show();
+        game.getPaddleActor().setVisible(true);
+        game.getBallActor().setVisible(true);
     }
 
     @Override
@@ -44,11 +50,15 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         game.musicDispose();
+        game.stageDispose();
     }
 
     @Override
     public void hide() {
+        this.score.hide();
         game.musicPause();
+        game.getPaddleActor().setVisible(false);
+        game.getBallActor().setVisible(false);
         Gdx.app.log("GameScreen.java", "hide");
     }
 
@@ -65,12 +75,13 @@ public class GameScreen implements Screen {
         game.clearScreen();
         game.cameraUpdate();
         game.setProjectionMatrixCombined();
+        game.stageDraw();
         ball.update();
         rectangle.update();
 
         game.batchBegin();
         game.batchDrawBackground();
-        game.batchDrawRectangle(rectangle);
+        game.batchDrawPaddle(rectangle);
         game.batchDrawBall(ball);
         game.batchEnd();
 
@@ -78,7 +89,7 @@ public class GameScreen implements Screen {
 
     }
 
-    public Rectangle getRectangle() {
+    public Paddle getPaddle() {
         return this.rectangle;
     }
 }

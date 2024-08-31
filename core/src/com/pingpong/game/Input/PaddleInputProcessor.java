@@ -1,20 +1,19 @@
 package com.pingpong.game.Input;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
 import com.pingpong.game.GameHandler;
-import com.pingpong.game.Actor.Rectangle;
+import com.pingpong.game.Actor.Paddle;
 
 /**
- * Input handler for Rectangle
+ * Input handler for Paddle
  */
-public class RectangleInputProcessor implements InputProcessor {
+public class PaddleInputProcessor implements InputProcessor {
 
-    private Rectangle rectangle;
+    private Paddle rectangle;
     private GameHandler game;
 
-    public RectangleInputProcessor(GameHandler game, Rectangle rectangle) {
+    public PaddleInputProcessor(GameHandler game, Paddle rectangle) {
         this.game = game;
         this.rectangle = rectangle;
     }

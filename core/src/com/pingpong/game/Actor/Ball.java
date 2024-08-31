@@ -8,7 +8,7 @@ public class Ball {
     private float speedX;
     private Vector2 ballVector;
     private float speedY;
-    private Rectangle paddle;
+    private Paddle paddle;
     final private float HEIGHT = 22;
     final private float WIDTH = 22;
 
@@ -56,7 +56,7 @@ public class Ball {
 
     public void debugCollision() {
         Gdx.app.log("Ball.java", "collision!");
-        Gdx.app.log("Ball.java", "xRectangle: " + this.paddle.getX() + " yRectangle: " + this.paddle.getY());
+        Gdx.app.log("Ball.java", "xPaddle: " + this.paddle.getX() + " yPaddle: " + this.paddle.getY());
         Gdx.app.log("Ball.java",
                 "xball: " + this.ballVector.x + " yball: " + this.ballVector.y + "ballSpeedX: " + this.speedX
                         + " ballSpeedY: " + this.speedY);
@@ -120,7 +120,7 @@ public class Ball {
         }
     }
 
-    public void setPaddle(Rectangle paddle) {
+    public void setPaddle(Paddle paddle) {
         this.paddle = paddle;
     }
 
