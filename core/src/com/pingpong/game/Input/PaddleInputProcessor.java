@@ -10,22 +10,22 @@ import com.pingpong.game.Actor.Paddle;
  */
 public class PaddleInputProcessor implements InputProcessor {
 
-    private Paddle rectangle;
+    private Paddle paddle;
     private GameHandler game;
 
-    public PaddleInputProcessor(GameHandler game, Paddle rectangle) {
+    public PaddleInputProcessor(GameHandler game, Paddle paddle) {
         this.game = game;
-        this.rectangle = rectangle;
+        this.paddle = paddle;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {
             case Keys.LEFT:
-                rectangle.setLeftMove(false);
+                paddle.setLeftMove(false);
                 break;
             case Keys.RIGHT:
-                rectangle.setRightMove(false);
+                paddle.setRightMove(false);
                 break;
             case Keys.UP:
                 break;
@@ -42,10 +42,10 @@ public class PaddleInputProcessor implements InputProcessor {
 
         switch (keycode) {
             case Keys.LEFT:
-                rectangle.setLeftMove(true);
+                paddle.setLeftMove(true);
                 break;
             case Keys.RIGHT:
-                rectangle.setRightMove(true);
+                paddle.setRightMove(true);
                 break;
             case Keys.UP:
                 break;

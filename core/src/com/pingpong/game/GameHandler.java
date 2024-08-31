@@ -38,41 +38,39 @@ public class GameHandler extends Game {
     private Sprite backgroundSprite;
     private int scorePlayer;
     private int scoreEnemy;
-    private Image paddleSprite;
+    private Paddle paddle;
     private Image background;
-    private Image ball;
+    private Ball ball;
 
     public void create() {
 
         this.batch = new SpriteBatch();
         this.font = new BitmapFont();
         this.camera = new OrthographicCamera();
+        this.atlas = new TextureAtlas(Gdx.files.internal("ping_pong.atlas"));
+        this.rectangleSprite = this.atlas.createSprite("paddleRed");
+        this.paddle = new Paddle(this.rectangleSprite);
+        this.ballSprite = this.atlas.createSprite("ballBlue");
+        this.backgroundSprite = this.atlas.createSprite("background");
         this.camera.setToOrtho(false, 800, 480);
         this.gameScreen = new GameScreen(this);
         this.mainTitleScreen = new MainTitleScreen(this);
         this.music = Gdx.audio.newMusic(Gdx.files.internal("mainMusic.wav"));
         this.stage = new Stage(new ScreenViewport());
-        this.paddleInputProcessor = new PaddleInputProcessor(this,
-                this.getGameScreen().getPaddle());
+        this.paddleInputProcessor = new PaddleInputProcessor(this, this.paddle);
         this.inputMultiplexer = new InputMultiplexer();
         this.inputMultiplexer.addProcessor(this.getStage());
         this.inputMultiplexer.addProcessor(this.paddleInputProcessor);
         Gdx.input.setInputProcessor(this.inputMultiplexer);
         this.mainTitleMenuButton = new MainTitleMenu(this);
-        this.atlas = new TextureAtlas(Gdx.files.internal("ping_pong.atlas"));
-        this.rectangleSprite = this.atlas.createSprite("paddleRed");
-        this.ballSprite = this.atlas.createSprite("ballBlue");
-        this.backgroundSprite = this.atlas.createSprite("background");
         this.setScreen(mainTitleScreen);
-        this.paddleSprite = new Image(this.rectangleSprite);
-        this.stage.addActor(paddleSprite);
+        this.stage.addActor(paddle);
         this.background = new Image(this.backgroundSprite);
         this.stage.addActor(background);
         this.background.setZIndex(0);
         this.background.setPosition(0, 0);
-        this.ball = new Image(this.ballSprite);
-        this.ball.setVisible(false);
-        this.paddleSprite.setVisible(false);
+        this.ball = new Ball(this.ballSprite);
+        this.paddle.setVisible(false);
         this.stage.addActor(this.ball);
     }
 
@@ -146,13 +144,11 @@ public class GameHandler extends Game {
         this.batch.setProjectionMatrix(this.getCamera().combined);
     }
 
-    public void batchDrawPaddle(Paddle rectangle) {
-        this.paddleSprite.setPosition(rectangle.getX(), rectangle.getY());
-        this.paddleSprite.draw(this.batch, 0);
+    public void batchDrawPaddle() {
+        this.paddle.draw(this.batch, 0);
     }
 
-    public void batchDrawBall(Ball ball) {
-        this.ball.setPosition(ball.getX(), ball.getY());
+    public void batchDrawBall() {
         this.ball.draw(this.batch, 0);
     }
 
@@ -193,10 +189,22 @@ public class GameHandler extends Game {
     }
 
     public Image getPaddleActor() {
-        return this.paddleSprite;
+        return this.paddle;
     }
 
     public Image getBallActor() {
         return this.ball;
+    }
+
+    public void ballUpdate() {
+        this.ball.update();
+    }
+
+    public void paddleUpdate() {
+        this.paddle.update();
+    }
+
+    public void ballCheckCollision() {
+        this.ball.checkColision(this.paddle);
     }
 }

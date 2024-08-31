@@ -9,16 +9,11 @@ import com.pingpong.game.Actor.Score;
 
 public class GameScreen implements Screen {
     private final GameHandler game;
-    private Paddle rectangle;
-    private Ball ball;
+    private Paddle paddle;
     private Score score;
 
     public GameScreen(final GameHandler game) {
-
         this.game = game;
-        this.rectangle = new Paddle(0, 0);
-        this.ball = new Ball(400, 200);
-        this.ball.setPaddle(this.rectangle);
     }
 
     @Override
@@ -76,20 +71,20 @@ public class GameScreen implements Screen {
         game.cameraUpdate();
         game.setProjectionMatrixCombined();
         game.stageDraw();
-        ball.update();
-        rectangle.update();
+        game.ballUpdate();
+        game.paddleUpdate();
 
         game.batchBegin();
         game.batchDrawBackground();
-        game.batchDrawPaddle(rectangle);
-        game.batchDrawBall(ball);
+        game.batchDrawPaddle();
+        game.batchDrawBall();
         game.batchEnd();
 
-        ball.checkColision();
+        game.ballCheckCollision();
 
     }
 
     public Paddle getPaddle() {
-        return this.rectangle;
+        return this.paddle;
     }
 }

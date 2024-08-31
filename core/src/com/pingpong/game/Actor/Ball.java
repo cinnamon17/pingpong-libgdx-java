@@ -1,27 +1,26 @@
 package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class Ball {
+public class Ball extends Image {
 
     private float speedX;
-    private Vector2 ballVector;
     private float speedY;
     private Paddle paddle;
-    final private float HEIGHT = 22;
-    final private float WIDTH = 22;
 
-    public Ball(float x, float y) {
+    public Ball(TextureRegion textureRegion) {
 
+        super(textureRegion);
         this.speedX = 300;
         this.speedY = 300;
-        this.ballVector = new Vector2(x, y);
+        this.setPosition(400, 200);
+        this.setVisible(false);
     }
 
     public void update() {
-        this.ballVector.x += speedX * Gdx.graphics.getDeltaTime();
-        this.ballVector.y += speedY * Gdx.graphics.getDeltaTime();
+        this.moveBy(speedX * Gdx.graphics.getDeltaTime(), speedY * Gdx.graphics.getDeltaTime());
 
         if (isAxisYTouched()) {
             speedX = -speedX;
@@ -32,15 +31,16 @@ public class Ball {
     }
 
     public boolean isAxisYTouched() {
-        return this.ballVector.x <= 0 || this.ballVector.x >= Gdx.graphics.getWidth() - this.WIDTH;
+        return this.getX() <= 0 || this.getX() >= Gdx.graphics.getWidth() - this.getWidth();
     }
 
     public boolean isAxisXTouched() {
-        return this.ballVector.y <= 0 || this.ballVector.y >= Gdx.graphics.getHeight() - this.HEIGHT;
+        return this.getY() <= 0 || this.getY() >= Gdx.graphics.getHeight() - this.getHeight();
     }
 
-    public void checkColision() {
+    public void checkColision(Paddle paddle) {
 
+        this.setPaddle(paddle);
         if (isCollided()) {
             this.debugCollision();
             this.handleHorizontalCollision();
@@ -48,17 +48,17 @@ public class Ball {
     }
 
     private boolean isCollided() {
-        return this.paddle.getX() < this.ballVector.x + this.WIDTH
-                && this.paddle.getY() < this.ballVector.y + this.HEIGHT
-                && this.paddle.getX() + this.paddle.getWidth() > this.ballVector.x
-                && this.paddle.getY() + this.paddle.getHeight() > this.ballVector.y;
+        return paddle.getX() < this.getX() + this.getWidth()
+                && this.paddle.getY() < this.getY() + this.getHeight()
+                && this.paddle.getX() + this.paddle.getWidth() > this.getX()
+                && this.paddle.getY() + this.paddle.getHeight() > this.getY();
     }
 
     public void debugCollision() {
         Gdx.app.log("Ball.java", "collision!");
         Gdx.app.log("Ball.java", "xPaddle: " + this.paddle.getX() + " yPaddle: " + this.paddle.getY());
         Gdx.app.log("Ball.java",
-                "xball: " + this.ballVector.x + " yball: " + this.ballVector.y + "ballSpeedX: " + this.speedX
+                "xball: " + this.getX() + " yball: " + this.getY() + "ballSpeedX: " + this.speedX
                         + " ballSpeedY: " + this.speedY);
     }
 
@@ -88,20 +88,20 @@ public class Ball {
     }
 
     public boolean isBallTouchingRightSideOfPaddle() {
-        return this.ballVector.x + this.WIDTH - paddle.getX() > 80;
+        return this.getX() + this.getWidth() - this.paddle.getX() > 80;
     }
 
     public boolean isBallTouchingLeftSideOfPaddle() {
-        return this.ballVector.x + this.WIDTH - paddle.getX() < 40;
+        return this.getX() + this.getWidth() - paddle.getX() < 40;
     }
 
     public boolean isBallTouchingCenterOfPaddle() {
-        return this.ballVector.x + this.WIDTH - this.paddle.getX() > 40
-                && this.ballVector.x + this.WIDTH - this.paddle.getX() < 80;
+        return this.getX() + this.getWidth() - this.paddle.getX() > 40
+                && this.getX() + this.getWidth() - this.paddle.getX() < 80;
     }
 
     public boolean isThereHorizontalCollision() {
-        return this.ballVector.x + this.WIDTH > paddle.getX() && this.ballVector.x < paddle.getX() + paddle.getWidth();
+        return this.getX() + this.getWidth() > paddle.getX() && this.getX() < paddle.getX() + paddle.getWidth();
     }
 
     public void handleInertiaMovements() {
@@ -122,29 +122,5 @@ public class Ball {
 
     public void setPaddle(Paddle paddle) {
         this.paddle = paddle;
-    }
-
-    public float getX() {
-        return this.ballVector.x;
-    }
-
-    public float getY() {
-        return this.ballVector.y;
-    }
-
-    public void setX(int x) {
-        this.ballVector.x = x;
-    }
-
-    public void setY(int y) {
-        this.ballVector.y = y;
-    }
-
-    public float getWidth() {
-        return this.WIDTH;
-    }
-
-    public float getHeight() {
-        return this.HEIGHT;
     }
 }

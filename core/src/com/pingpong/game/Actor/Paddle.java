@@ -2,19 +2,18 @@
 package com.pingpong.game.Actor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class Paddle {
+public class Paddle extends Image {
 
-    private Vector2 rectangleVector;
     private boolean leftMove;
     private boolean rightMove;
-    final private float WIDTH = 104;
-    final private float HEIGHT = 24;
 
-    public Paddle(int x, int y) {
+    public Paddle(TextureRegion textureRegion) {
 
-        this.rectangleVector = new Vector2(x, y);
+        super(textureRegion);
+        this.setPosition(0, 0);
     }
 
     public void update() {
@@ -29,22 +28,22 @@ public class Paddle {
 
     public void handleLeftMove() {
 
-        this.rectangleVector.x -= 200 * Gdx.graphics.getDeltaTime();
+        this.setX(this.getX() - 200 * Gdx.graphics.getDeltaTime());
         if (isAxisYTouched()) {
-            this.rectangleVector.set(0, 0);
+            this.setPosition(0, 0);
         }
     }
 
     public void handleRightMove() {
 
-        this.rectangleVector.x += 200 * Gdx.graphics.getDeltaTime();
+        this.setX(this.getX() + 200 * Gdx.graphics.getDeltaTime());
         if (isAxisYTouched()) {
-            this.rectangleVector.set(Gdx.graphics.getWidth() - this.WIDTH, 0);
+            this.setPosition(Gdx.graphics.getWidth() - this.getWidth(), 0);
         }
     }
 
     public boolean isAxisYTouched() {
-        return this.rectangleVector.x <= 0 || this.rectangleVector.x >= Gdx.graphics.getWidth() - this.WIDTH;
+        return this.getX() <= 0 || this.getX() >= Gdx.graphics.getWidth() - this.getWidth();
     }
 
     public void setLeftMove(boolean t) {
@@ -57,30 +56,6 @@ public class Paddle {
         if (leftMove && t)
             leftMove = false;
         rightMove = t;
-    }
-
-    public float getX() {
-        return this.rectangleVector.x;
-    }
-
-    public float getY() {
-        return this.rectangleVector.y;
-    }
-
-    public void setX(int x) {
-        this.rectangleVector.x = x;
-    }
-
-    public void setY(int y) {
-        this.rectangleVector.y = y;
-    }
-
-    public float getWidth() {
-        return this.WIDTH;
-    }
-
-    public float getHeight() {
-        return this.HEIGHT;
     }
 
     public boolean isLeftMoved() {
