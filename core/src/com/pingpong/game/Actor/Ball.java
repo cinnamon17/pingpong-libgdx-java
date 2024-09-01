@@ -15,7 +15,7 @@ public class Ball extends Image {
         super(textureRegion);
         this.speedX = 300;
         this.speedY = 300;
-        this.setPosition(100, 400);
+        this.setPosition(400, 240);
         this.setVisible(false);
     }
 
@@ -118,7 +118,7 @@ public class Ball extends Image {
             speedY = -speedY;
         } else {
             speedX = 10;
-            speedY = -speedY + 50;
+            speedY = -speedY;
         }
     }
 
