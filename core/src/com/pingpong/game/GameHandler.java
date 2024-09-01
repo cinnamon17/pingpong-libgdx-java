@@ -1,5 +1,8 @@
 package com.pingpong.game;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -35,14 +38,21 @@ public class GameHandler extends Game {
     private MainTitleMenu mainTitleMenuButton;
     private TextureAtlas atlas;
     private Sprite paddleSprite;
+    private Sprite paddleEnemySprite;
     private Sprite ballSprite;
     private Sprite backgroundSprite;
     private int scorePlayer = 0;
     private int scoreEnemy = 0;
     private Paddle paddle;
+    private Paddle paddleEnemy;
     private Image background;
     private Ball ball;
     private Score score;
+    private InputStream serverInputStream;
+    private OutputStream serverOutputStream;
+    private InputStream clientInputStream;
+    private OutputStream clientOutputStream;
+    private boolean isServer;
 
     public void create() {
 
@@ -51,7 +61,9 @@ public class GameHandler extends Game {
         this.camera = new OrthographicCamera();
         this.atlas = new TextureAtlas(Gdx.files.internal("ping_pong.atlas"));
         this.paddleSprite = this.atlas.createSprite("paddleRed");
-        this.paddle = new Paddle(this.paddleSprite);
+        this.paddleEnemySprite = this.atlas.createSprite("paddleBlu");
+        this.paddle = new Paddle(this.paddleSprite, 0, 0);
+        this.paddleEnemy = new Paddle(this.paddleEnemySprite, 400, 456);
         this.ballSprite = this.atlas.createSprite("ballBlue");
         this.backgroundSprite = this.atlas.createSprite("background");
         this.camera.setToOrtho(false, 800, 480);
@@ -66,6 +78,7 @@ public class GameHandler extends Game {
         Gdx.input.setInputProcessor(this.inputMultiplexer);
         this.mainTitleMenuButton = new MainTitleMenu(this);
         this.stage.addActor(paddle);
+        this.stage.addActor(paddleEnemy);
         this.background = new Image(this.backgroundSprite);
         this.stage.addActor(background);
         this.background.setZIndex(0);
@@ -151,6 +164,10 @@ public class GameHandler extends Game {
         this.paddle.draw(this.batch, 0);
     }
 
+    public void batchDrawPaddleEnemy() {
+        this.paddleEnemy.draw(this.batch, 0);
+    }
+
     public void batchDrawBall() {
         this.ball.draw(this.batch, 0);
     }
@@ -199,6 +216,10 @@ public class GameHandler extends Game {
         return this.paddle;
     }
 
+    public Paddle getPaddleActorEnemy() {
+        return this.paddleEnemy;
+    }
+
     public Ball getBallActor() {
         return this.ball;
     }
@@ -231,5 +252,45 @@ public class GameHandler extends Game {
             this.ball.setPosition(400, 260);
         }
         this.score.update();
+    }
+
+    public void setServerOutputStream(OutputStream outputStream) {
+        this.serverOutputStream = outputStream;
+    }
+
+    public void setServerInputStream(InputStream inputStream) {
+        this.serverInputStream = inputStream;
+    }
+
+    public void setClientOutputStream(OutputStream outputStream) {
+        this.clientOutputStream = outputStream;
+    }
+
+    public void setClientInputStream(InputStream inputStream) {
+        this.clientInputStream = inputStream;
+    }
+
+    public OutputStream getServerOutputStream() {
+        return this.serverOutputStream;
+    }
+
+    public InputStream getServerInputStream() {
+        return this.serverInputStream;
+    }
+
+    public OutputStream getClientOutputStream() {
+        return this.clientOutputStream;
+    }
+
+    public InputStream getClientInputStream() {
+        return this.clientInputStream;
+    }
+
+    public boolean getIsServer() {
+        return this.isServer;
+    }
+
+    public void setIsServer(boolean b) {
+        this.isServer = b;
     }
 }

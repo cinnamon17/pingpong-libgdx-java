@@ -10,10 +10,10 @@ public class Paddle extends Image {
     private boolean leftMove;
     private boolean rightMove;
 
-    public Paddle(TextureRegion textureRegion) {
+    public Paddle(TextureRegion textureRegion, float x, float y) {
 
         super(textureRegion);
-        this.setPosition(0, 0);
+        this.setPosition(x, y);
         this.setVisible(false);
     }
 

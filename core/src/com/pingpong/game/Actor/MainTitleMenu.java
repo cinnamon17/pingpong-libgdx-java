@@ -79,13 +79,17 @@ public class MainTitleMenu {
 				OutputStream outputStream = socket.getOutputStream();
 				InputStream inputStream = socket.getInputStream();
 
-				try {
-					outputStream.write("sent this to the server".getBytes());
-					Gdx.app.log("[Server]: MainTitleScreen", "data sent");
-				} catch (IOException e) {
-					Gdx.app.log("[Server]: MainTitleScreen", "error sending data", e);
-				}
+				game.setServerInputStream(inputStream);
+				game.setServerOutputStream(outputStream);
+				game.setIsServer(true);
+				game.setScreen(game.getGameScreen());
 
+				// try {
+				// outputStream.write("sent this to the server".getBytes());
+				// Gdx.app.log("[Server]: MainTitleScreen", "data sent");
+				// } catch (IOException e) {
+				// Gdx.app.log("[Server]: MainTitleScreen", "error sending data", e);
+				// }
 			}
 
 		});
@@ -100,17 +104,21 @@ public class MainTitleMenu {
 				OutputStream outputStream = socket.getOutputStream();
 				InputStream inputStream = socket.getInputStream();
 
-				byte[] b = new byte[1024];
+				game.setClientInputStream(inputStream);
+				game.setClientOutputStream(outputStream);
+				game.setScreen(game.getGameScreen());
 
-				try {
-					inputStream.read(b);
-					Gdx.app.log("[Client]: MainTitleScreen", "data received");
-				} catch (IOException e) {
-					Gdx.app.log("[Client]: MainTitleScreen", "error reading data", e);
-				}
-
-				String readedData = new String(b);
-				Gdx.app.log("[Client]", readedData);
+				// byte[] b = new byte[1024];
+				//
+				// try {
+				// inputStream.read(b);
+				// Gdx.app.log("[Client]: MainTitleScreen", "data received");
+				// } catch (IOException e) {
+				// Gdx.app.log("[Client]: MainTitleScreen", "error reading data", e);
+				// }
+				//
+				// String readedData = new String(b);
+				// Gdx.app.log("[Client]", readedData);
 			}
 
 		});
