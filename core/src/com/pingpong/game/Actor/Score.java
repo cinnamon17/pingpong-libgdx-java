@@ -9,33 +9,30 @@ import com.pingpong.game.GameHandler;
 /**
  * Score
  */
-public class Score {
+public class Score extends Table {
 	private GameHandler game;
 	private Skin skin;
-	private Table table;
 	private Label playerScore;
 	private Label enemyScore;
 
 	public Score(final GameHandler game) {
+		super();
 		this.game = game;
-		this.table = new Table();
-		this.table.setPosition(0, 90);
-		this.table.setFillParent(true);
-		this.game.getStage().addActor(table);
+		this.setPosition(0, 90);
+		this.setVisible(false);
+		this.setFillParent(true);
 		this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 		this.playerScore = new Label("Player: " + this.game.getScorePlayer(), this.skin);
 		this.enemyScore = new Label("Enemy: " + this.game.getScoreEnemy(), this.skin);
-		this.table.add(playerScore).fillX().uniformX();
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(enemyScore).fillX().uniformX();
-		this.table.row();
+		this.add(playerScore).fillX().uniformX();
+		this.row().pad(10, 0, 10, 0);
+		this.add(enemyScore).fillX().uniformX();
+		this.row();
 	}
 
-	public void show() {
-		this.table.setVisible(true);
-	}
+	public void update() {
 
-	public void hide() {
-		this.table.setVisible(false);
+		this.playerScore.setText("Player: " + this.game.getScorePlayer());
+		this.enemyScore.setText("Enemy: " + this.game.getScoreEnemy());
 	}
 }

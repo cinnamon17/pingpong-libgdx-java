@@ -15,7 +15,7 @@ public class Ball extends Image {
         super(textureRegion);
         this.speedX = 300;
         this.speedY = 300;
-        this.setPosition(400, 200);
+        this.setPosition(100, 400);
         this.setVisible(false);
     }
 
@@ -28,6 +28,8 @@ public class Ball extends Image {
         if (isAxisXTouched()) {
             speedY = -speedY;
         }
+
+        this.resetPosIfTopOrBottomTouched();
     }
 
     public boolean isAxisYTouched() {
@@ -122,5 +124,28 @@ public class Ball extends Image {
 
     public void setPaddle(Paddle paddle) {
         this.paddle = paddle;
+    }
+
+    public void setSpeedX(float speed) {
+        this.speedX = speed;
+    }
+
+    public void setSpeedY(float speed) {
+        this.speedY = speed;
+    }
+
+    public boolean isBallTouchingBottomOfScreen() {
+        return this.getY() <= 0;
+    }
+
+    public boolean isBallTouchingTopOfScreen() {
+        return this.getY() + this.getHeight() >= 480;
+    }
+
+    public void resetPosIfTopOrBottomTouched() {
+
+        if (this.isBallTouchingTopOfScreen() || this.isBallTouchingBottomOfScreen()) {
+            this.setSpeedX(0);
+        }
     }
 }

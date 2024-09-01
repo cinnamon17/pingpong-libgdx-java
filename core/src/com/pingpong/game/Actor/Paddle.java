@@ -14,6 +14,7 @@ public class Paddle extends Image {
 
         super(textureRegion);
         this.setPosition(0, 0);
+        this.setVisible(false);
     }
 
     public void update() {

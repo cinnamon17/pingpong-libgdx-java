@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.pingpong.game.Actor.Ball;
 import com.pingpong.game.Actor.Paddle;
+import com.pingpong.game.Actor.Score;
 import com.pingpong.game.Input.PaddleInputProcessor;
 import com.pingpong.game.Screen.GameScreen;
 import com.pingpong.game.Screen.MainTitleScreen;
@@ -33,14 +34,15 @@ public class GameHandler extends Game {
     private InputMultiplexer inputMultiplexer;
     private MainTitleMenu mainTitleMenuButton;
     private TextureAtlas atlas;
-    private Sprite rectangleSprite;
+    private Sprite paddleSprite;
     private Sprite ballSprite;
     private Sprite backgroundSprite;
-    private int scorePlayer;
-    private int scoreEnemy;
+    private int scorePlayer = 0;
+    private int scoreEnemy = 0;
     private Paddle paddle;
     private Image background;
     private Ball ball;
+    private Score score;
 
     public void create() {
 
@@ -48,8 +50,8 @@ public class GameHandler extends Game {
         this.font = new BitmapFont();
         this.camera = new OrthographicCamera();
         this.atlas = new TextureAtlas(Gdx.files.internal("ping_pong.atlas"));
-        this.rectangleSprite = this.atlas.createSprite("paddleRed");
-        this.paddle = new Paddle(this.rectangleSprite);
+        this.paddleSprite = this.atlas.createSprite("paddleRed");
+        this.paddle = new Paddle(this.paddleSprite);
         this.ballSprite = this.atlas.createSprite("ballBlue");
         this.backgroundSprite = this.atlas.createSprite("background");
         this.camera.setToOrtho(false, 800, 480);
@@ -63,15 +65,16 @@ public class GameHandler extends Game {
         this.inputMultiplexer.addProcessor(this.paddleInputProcessor);
         Gdx.input.setInputProcessor(this.inputMultiplexer);
         this.mainTitleMenuButton = new MainTitleMenu(this);
-        this.setScreen(mainTitleScreen);
         this.stage.addActor(paddle);
         this.background = new Image(this.backgroundSprite);
         this.stage.addActor(background);
         this.background.setZIndex(0);
         this.background.setPosition(0, 0);
         this.ball = new Ball(this.ballSprite);
-        this.paddle.setVisible(false);
+        this.score = new Score(this);
         this.stage.addActor(this.ball);
+        this.stage.addActor(this.score);
+        this.setScreen(mainTitleScreen);
     }
 
     public MainTitleScreen getMainTitleScreen() {
@@ -156,6 +159,10 @@ public class GameHandler extends Game {
         this.background.draw(this.batch, 0);
     }
 
+    public void batchDrawScore() {
+        this.score.draw(this.batch, 0);
+    }
+
     public void stageDraw() {
         this.stage.draw();
     }
@@ -188,12 +195,16 @@ public class GameHandler extends Game {
         this.scoreEnemy = score;
     }
 
-    public Image getPaddleActor() {
+    public Paddle getPaddleActor() {
         return this.paddle;
     }
 
-    public Image getBallActor() {
+    public Ball getBallActor() {
         return this.ball;
+    }
+
+    public Score getScoreActor() {
+        return this.score;
     }
 
     public void ballUpdate() {
@@ -206,5 +217,19 @@ public class GameHandler extends Game {
 
     public void ballCheckCollision() {
         this.ball.checkColision(this.paddle);
+    }
+
+    public void scoreUpdate() {
+
+        if (this.ball.isBallTouchingTopOfScreen()) {
+            this.scorePlayer++;
+            this.ball.setPosition(400, 260);
+        }
+
+        if (this.ball.isBallTouchingBottomOfScreen()) {
+            this.scoreEnemy++;
+            this.ball.setPosition(400, 260);
+        }
+        this.score.update();
     }
 }

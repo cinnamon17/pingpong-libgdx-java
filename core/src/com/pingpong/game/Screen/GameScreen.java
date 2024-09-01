@@ -3,14 +3,9 @@ package com.pingpong.game.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.pingpong.game.GameHandler;
-import com.pingpong.game.Actor.Ball;
-import com.pingpong.game.Actor.Paddle;
-import com.pingpong.game.Actor.Score;
 
 public class GameScreen implements Screen {
     private final GameHandler game;
-    private Paddle paddle;
-    private Score score;
 
     public GameScreen(final GameHandler game) {
         this.game = game;
@@ -19,13 +14,12 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
 
-        this.score = new Score(game);
         Gdx.app.log("GameScreen.java", "show");
         game.setMusicLooping(true);
         game.musicPlay();
-        this.score.show();
         game.getPaddleActor().setVisible(true);
         game.getBallActor().setVisible(true);
+        game.getScoreActor().setVisible(true);
     }
 
     @Override
@@ -50,10 +44,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
-        this.score.hide();
         game.musicPause();
         game.getPaddleActor().setVisible(false);
         game.getBallActor().setVisible(false);
+        game.getScoreActor().setVisible(false);
         Gdx.app.log("GameScreen.java", "hide");
     }
 
@@ -72,9 +66,11 @@ public class GameScreen implements Screen {
         game.setProjectionMatrixCombined();
         game.stageDraw();
         game.ballUpdate();
+        game.scoreUpdate();
         game.paddleUpdate();
 
         game.batchBegin();
+        game.batchDrawScore();
         game.batchDrawBackground();
         game.batchDrawPaddle();
         game.batchDrawBall();
@@ -82,9 +78,5 @@ public class GameScreen implements Screen {
 
         game.ballCheckCollision();
 
-    }
-
-    public Paddle getPaddle() {
-        return this.paddle;
     }
 }
