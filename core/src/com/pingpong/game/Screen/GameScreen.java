@@ -1,14 +1,20 @@
 package com.pingpong.game.Screen;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.utils.Json;
 import com.pingpong.game.GameHandler;
 
 public class GameScreen implements Screen {
     private final GameHandler game;
+    private Json json;
+    private DataOutputStream serverDataOutputStream, clientDataOutputStream;
+    private DataInputStream serverDataInputStream, clientDataInputStream;
 
     public GameScreen(final GameHandler game) {
         this.game = game;
@@ -24,6 +30,11 @@ public class GameScreen implements Screen {
         game.getPaddleActorEnemy().setVisible(true);
         game.getBallActor().setVisible(true);
         game.getScoreActor().setVisible(true);
+        json = new Json();
+        serverDataOutputStream = new DataOutputStream(game.getServerOutputStream());
+        serverDataInputStream = new DataInputStream(game.getServerInputStream());
+        clientDataInputStream = new DataInputStream(game.getClientInputStream());
+        clientDataOutputStream = new DataOutputStream(game.getClientOutputStream());
     }
 
     @Override
@@ -77,33 +88,14 @@ public class GameScreen implements Screen {
 
             if (game.getIsServer()) {
 
-                ByteBuffer serverByteBuffer = ByteBuffer.allocate(4);
-                serverByteBuffer.putFloat(game.getPaddleActor().getX());
-
-                game.getServerOutputStream().write(serverByteBuffer.array());
-
-                Gdx.app.log("GameScreen.java", "server sent posX: " + game.getPaddleActor().getX());
-                byte[] b = new byte[1024];
-
-                game.getServerInputStream().read(b);
-
-                float posX = ByteBuffer.wrap(b).getFloat();
-
-                Gdx.app.log("GameScreen.java", "server received posX: " + posX);
+                serverDataOutputStream.writeFloat(game.getPaddleActor().getX());
+                float posX = serverDataInputStream.readFloat();
                 game.getPaddleActorEnemy().setX(posX);
             } else {
 
-                byte[] b = new byte[1024];
-                game.getClientInputStream().read(b);
-                float posX = ByteBuffer.wrap(b).getFloat();
-
-                Gdx.app.log("GameScreen.java", "client received posX: " + posX);
+                float posX = clientDataInputStream.readFloat();
                 game.getPaddleActorEnemy().setX(posX);
-                ByteBuffer clientByteBuffer = ByteBuffer.allocate(4);
-                clientByteBuffer.putFloat(game.getPaddleActor().getX());
-
-                game.getClientOutputStream().write(clientByteBuffer.array());
-                Gdx.app.log("GameScreen.java", "client sent posX: " + game.getPaddleActor().getX());
+                clientDataOutputStream.writeFloat(game.getPaddleActor().getX());
             }
 
         } catch (IOException e) {
