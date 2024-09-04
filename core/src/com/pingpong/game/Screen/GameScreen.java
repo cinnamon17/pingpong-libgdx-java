@@ -9,12 +9,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Json;
 import com.pingpong.game.GameHandler;
+import com.pingpong.game.Dto.Data;
 
 public class GameScreen implements Screen {
     private final GameHandler game;
     private Json json;
     private DataOutputStream serverDataOutputStream, clientDataOutputStream;
     private DataInputStream serverDataInputStream, clientDataInputStream;
+    private Data data;
 
     public GameScreen(final GameHandler game) {
         this.game = game;
@@ -35,6 +37,7 @@ public class GameScreen implements Screen {
         serverDataInputStream = new DataInputStream(game.getServerInputStream());
         clientDataInputStream = new DataInputStream(game.getClientInputStream());
         clientDataOutputStream = new DataOutputStream(game.getClientOutputStream());
+        data = new Data();
     }
 
     @Override
@@ -88,18 +91,24 @@ public class GameScreen implements Screen {
 
             if (game.getIsServer()) {
 
-                serverDataOutputStream.writeFloat(game.getPaddleActor().getX());
-                float posX = serverDataInputStream.readFloat();
-                game.getPaddleActorEnemy().setX(posX);
+                data.setServerPaddleX(game.getPaddleActor().getX());
+                data.setServerBallY(Gdx.graphics.getHeight() - game.getBallActor().getY());
+                data.setServerBallX(game.getBallActor().getX());
+                serverDataOutputStream.writeUTF(json.toJson(data));
+
+                Data clientData = json.fromJson(Data.class, serverDataInputStream.readUTF());
+                game.getPaddleActorEnemy().setX(clientData.getClientPaddleX());
             } else {
 
-                float posX = clientDataInputStream.readFloat();
-                game.getPaddleActorEnemy().setX(posX);
-                clientDataOutputStream.writeFloat(game.getPaddleActor().getX());
+                Data serverData = json.fromJson(Data.class, clientDataInputStream.readUTF());
+                game.getPaddleActorEnemy().setX(serverData.getServerPaddleX());
+                game.getBallActor().setPosition(serverData.getServerBallX(), serverData.getServerBallY());
+
+                data.setClientPaddleX(game.getPaddleActor().getX());
+                clientDataOutputStream.writeUTF(json.toJson(data));
             }
 
         } catch (IOException e) {
-
             Gdx.app.log("GameScreen.java", "Error sending Data", e);
         }
         game.batchBegin();
