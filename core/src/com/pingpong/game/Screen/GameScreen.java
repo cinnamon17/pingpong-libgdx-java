@@ -3,7 +3,6 @@ package com.pingpong.game.Screen;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -92,7 +91,8 @@ public class GameScreen implements Screen {
             if (game.getIsServer()) {
 
                 data.setServerPaddleX(game.getPaddleActor().getX());
-                data.setServerBallY(Gdx.graphics.getHeight() - game.getBallActor().getY());
+                data.setServerBallY(
+                        Gdx.graphics.getHeight() - game.getBallActor().getY() - game.getBallActor().getHeight());
                 data.setServerBallX(game.getBallActor().getX());
                 data.setScorePlayer(game.getScorePlayer());
                 data.setScoreEnemy(game.getScoreEnemy());

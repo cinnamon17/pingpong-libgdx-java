@@ -238,6 +238,7 @@ public class GameHandler extends Game {
 
     public void ballCheckCollision() {
         this.ball.checkColision(this.paddle);
+        this.ball.checkColision(this.paddleEnemy);
     }
 
     public void scoreUpdate() {
