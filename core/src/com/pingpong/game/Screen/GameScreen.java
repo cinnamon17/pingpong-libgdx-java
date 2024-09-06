@@ -94,6 +94,8 @@ public class GameScreen implements Screen {
                 data.setServerPaddleX(game.getPaddleActor().getX());
                 data.setServerBallY(Gdx.graphics.getHeight() - game.getBallActor().getY());
                 data.setServerBallX(game.getBallActor().getX());
+                data.setScorePlayer(game.getScorePlayer());
+                data.setScoreEnemy(game.getScoreEnemy());
                 serverDataOutputStream.writeUTF(json.toJson(data));
 
                 Data clientData = json.fromJson(Data.class, serverDataInputStream.readUTF());
@@ -103,6 +105,8 @@ public class GameScreen implements Screen {
                 Data serverData = json.fromJson(Data.class, clientDataInputStream.readUTF());
                 game.getPaddleActorEnemy().setX(serverData.getServerPaddleX());
                 game.getBallActor().setPosition(serverData.getServerBallX(), serverData.getServerBallY());
+                game.setScoreEnemy(serverData.getScoreEnemy());
+                game.setScorePlayer(serverData.getScorePlayer());
 
                 data.setClientPaddleX(game.getPaddleActor().getX());
                 clientDataOutputStream.writeUTF(json.toJson(data));

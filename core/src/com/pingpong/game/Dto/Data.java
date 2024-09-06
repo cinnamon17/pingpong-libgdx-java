@@ -11,6 +11,8 @@ public class Data {
     private float serverBallY;
     private float clientBallX;
     private float clientBallY;
+    private int scoreEnemy;
+    private int scorePlayer;
 
     public float getClientBallX() {
         return clientBallX;
@@ -36,6 +38,14 @@ public class Data {
         return serverPaddleX;
     }
 
+    public int getScorePlayer() {
+        return scorePlayer;
+    }
+
+    public int getScoreEnemy() {
+        return scoreEnemy;
+    }
+
     public void setClientBallX(float clientBallX) {
         this.clientBallX = clientBallX;
     }
@@ -58,6 +68,14 @@ public class Data {
 
     public void setServerPaddleX(float serverPaddleX) {
         this.serverPaddleX = serverPaddleX;
+    }
+
+    public void setScoreEnemy(int scoreEnemy) {
+        this.scoreEnemy = scoreEnemy;
+    }
+
+    public void setScorePlayer(int scorePlayer) {
+        this.scorePlayer = scorePlayer;
     }
 
 }
