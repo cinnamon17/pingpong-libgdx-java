@@ -255,6 +255,10 @@ public class GameHandler extends Game {
         this.ball.setVisible(false);
     }
 
+    public void setScoreNoVisible() {
+        this.score.setVisible(false);
+    }
+
     public Ball getBallActor() {
         return this.ball;
     }

@@ -46,9 +46,10 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
         game.musicPause();
-        game.setPaddleVisible();
-        game.setBallVisible();
-        game.setScoreVisible();
+        game.setPaddleNoVisible();
+        game.setPaddleEnemyNoVisible();
+        game.setBallNoVisible();
+        game.setScoreNoVisible();
         Gdx.app.log("GameScreen.java", "hide");
     }
 
