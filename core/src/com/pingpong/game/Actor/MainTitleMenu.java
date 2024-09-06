@@ -1,6 +1,5 @@
 package com.pingpong.game.Actor;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -79,17 +78,10 @@ public class MainTitleMenu {
 				OutputStream outputStream = socket.getOutputStream();
 				InputStream inputStream = socket.getInputStream();
 
-				game.setServerInputStream(inputStream);
-				game.setServerOutputStream(outputStream);
+				game.setServerDataInputStream(inputStream);
+				game.setServerDataOutputStream(outputStream);
 				game.setIsServer(true);
 				game.setScreen(game.getGameScreen());
-
-				// try {
-				// outputStream.write("sent this to the server".getBytes());
-				// Gdx.app.log("[Server]: MainTitleScreen", "data sent");
-				// } catch (IOException e) {
-				// Gdx.app.log("[Server]: MainTitleScreen", "error sending data", e);
-				// }
 			}
 
 		});
@@ -104,21 +96,9 @@ public class MainTitleMenu {
 				OutputStream outputStream = socket.getOutputStream();
 				InputStream inputStream = socket.getInputStream();
 
-				game.setClientInputStream(inputStream);
-				game.setClientOutputStream(outputStream);
+				game.setClientDataInputStream(inputStream);
+				game.setClientDataOutputStream(outputStream);
 				game.setScreen(game.getGameScreen());
-
-				// byte[] b = new byte[1024];
-				//
-				// try {
-				// inputStream.read(b);
-				// Gdx.app.log("[Client]: MainTitleScreen", "data received");
-				// } catch (IOException e) {
-				// Gdx.app.log("[Client]: MainTitleScreen", "error reading data", e);
-				// }
-				//
-				// String readedData = new String(b);
-				// Gdx.app.log("[Client]", readedData);
 			}
 
 		});

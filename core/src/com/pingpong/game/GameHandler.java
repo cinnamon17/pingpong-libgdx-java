@@ -1,5 +1,8 @@
 package com.pingpong.game;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -15,10 +18,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.pingpong.game.Actor.Ball;
 import com.pingpong.game.Actor.Paddle;
 import com.pingpong.game.Actor.Score;
+import com.pingpong.game.Dto.Data;
 import com.pingpong.game.Input.PaddleInputProcessor;
 import com.pingpong.game.Screen.GameScreen;
 import com.pingpong.game.Screen.MainTitleScreen;
@@ -48,11 +53,11 @@ public class GameHandler extends Game {
     private Image background;
     private Ball ball;
     private Score score;
-    private InputStream serverInputStream;
-    private OutputStream serverOutputStream;
-    private InputStream clientInputStream;
-    private OutputStream clientOutputStream;
     private boolean isServer;
+    private DataOutputStream serverDataOutputStream, clientDataOutputStream;
+    private DataInputStream serverDataInputStream, clientDataInputStream;
+    private Json json;
+    private Data data;
 
     public void create() {
 
@@ -88,6 +93,8 @@ public class GameHandler extends Game {
         this.stage.addActor(this.ball);
         this.stage.addActor(this.score);
         this.setScreen(mainTitleScreen);
+        this.json = new Json();
+        this.data = new Data();
     }
 
     public MainTitleScreen getMainTitleScreen() {
@@ -156,6 +163,22 @@ public class GameHandler extends Game {
         this.camera.update();
     }
 
+    public void setPaddleVisible() {
+        this.paddle.setVisible(true);
+    }
+
+    public void setPaddleEnemyVisible() {
+        this.paddleEnemy.setVisible(true);
+    }
+
+    public void setBallVisible() {
+        this.ball.setVisible(true);
+    }
+
+    public void setScoreVisible() {
+        this.score.setVisible(true);
+    }
+
     public void setProjectionMatrixCombined() {
         this.batch.setProjectionMatrix(this.getCamera().combined);
     }
@@ -220,6 +243,18 @@ public class GameHandler extends Game {
         return this.paddleEnemy;
     }
 
+    public void setPaddleNoVisible() {
+        this.paddle.setVisible(false);
+    }
+
+    public void setPaddleEnemyNoVisible() {
+        this.paddleEnemy.setVisible(false);
+    }
+
+    public void setBallNoVisible() {
+        this.ball.setVisible(false);
+    }
+
     public Ball getBallActor() {
         return this.ball;
     }
@@ -255,36 +290,36 @@ public class GameHandler extends Game {
         this.score.update();
     }
 
-    public void setServerOutputStream(OutputStream outputStream) {
-        this.serverOutputStream = outputStream;
+    public void setServerDataOutputStream(OutputStream outputStream) {
+        this.serverDataOutputStream = new DataOutputStream(outputStream);
     }
 
-    public void setServerInputStream(InputStream inputStream) {
-        this.serverInputStream = inputStream;
+    public void setServerDataInputStream(InputStream inputStream) {
+        this.serverDataInputStream = new DataInputStream(inputStream);
     }
 
-    public void setClientOutputStream(OutputStream outputStream) {
-        this.clientOutputStream = outputStream;
+    public void setClientDataOutputStream(OutputStream outputStream) {
+        this.clientDataOutputStream = new DataOutputStream(outputStream);
     }
 
-    public void setClientInputStream(InputStream inputStream) {
-        this.clientInputStream = inputStream;
+    public void setClientDataInputStream(InputStream inputStream) {
+        this.clientDataInputStream = new DataInputStream(inputStream);
     }
 
-    public OutputStream getServerOutputStream() {
-        return this.serverOutputStream;
+    public DataInputStream getServerDataInputStream() {
+        return serverDataInputStream;
     }
 
-    public InputStream getServerInputStream() {
-        return this.serverInputStream;
+    public DataOutputStream getServerDataOutputStream() {
+        return serverDataOutputStream;
     }
 
-    public OutputStream getClientOutputStream() {
-        return this.clientOutputStream;
+    public DataInputStream getClientDataInputStream() {
+        return clientDataInputStream;
     }
 
-    public InputStream getClientInputStream() {
-        return this.clientInputStream;
+    public DataOutputStream getClientDataOutputStream() {
+        return clientDataOutputStream;
     }
 
     public boolean getIsServer() {
@@ -293,5 +328,70 @@ public class GameHandler extends Game {
 
     public void setIsServer(boolean b) {
         this.isServer = b;
+    }
+
+    public void updateMultiplayerCommunication() {
+        try {
+            if (this.getIsServer()) {
+                this.handleServerSideCommunication();
+            } else {
+                this.handleClientSideCommunication();
+            }
+        } catch (IOException e) {
+            this.logError(e);
+        }
+    }
+
+    private void handleServerSideCommunication() throws IOException {
+        updateServerData();
+        sendServerDataToClient();
+        receiveClientDataAndUpdatePaddle();
+    }
+
+    private void handleClientSideCommunication() throws IOException {
+        receiveServerDataAndUpdateClient();
+        updateClientData();
+        sendClientDataToServer();
+    }
+
+    private void updateServerData() {
+        data.setServerPaddleX(this.paddle.getX());
+        data.setServerBallX(this.ball.getX());
+        data.setServerBallY(calculateServerBallY());
+        data.setScorePlayer(this.getScorePlayer());
+        data.setScoreEnemy(this.getScoreEnemy());
+    }
+
+    private float calculateServerBallY() {
+        return Gdx.graphics.getHeight() - this.getBallActor().getY() - this.getBallActor().getHeight();
+    }
+
+    private void sendServerDataToClient() throws IOException {
+        this.getServerDataOutputStream().writeUTF(json.toJson(data));
+    }
+
+    private void receiveClientDataAndUpdatePaddle() throws IOException {
+        Data clientData = json.fromJson(Data.class, this.getServerDataInputStream().readUTF());
+        this.getPaddleActorEnemy().setX(clientData.getClientPaddleX());
+    }
+
+    private void receiveServerDataAndUpdateClient() throws IOException {
+        Data serverData = json.fromJson(Data.class, this.getClientDataInputStream().readUTF());
+        this.getPaddleActorEnemy().setX(serverData.getServerPaddleX());
+        this.getBallActor().setPosition(serverData.getServerBallX(), serverData.getServerBallY());
+        this.setScoreEnemy(serverData.getScoreEnemy());
+        this.setScorePlayer(serverData.getScorePlayer());
+    }
+
+    private void updateClientData() {
+        data.setClientPaddleX(this.getPaddleActor().getX());
+    }
+
+    private void sendClientDataToServer() throws IOException {
+        this.getClientDataOutputStream().writeUTF(json.toJson(data));
+    }
+
+    private void logError(IOException e) {
+        Gdx.app.log("GameScreen.java", "Error sending Data", e);
     }
 }
