@@ -38,7 +38,7 @@ public class MainTitleMenu {
 		this.game.getStage().addActor(table);
 		this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
-		this.newGame = new TextButton("Start/Resume", this.skin);
+		this.newGame = new TextButton("Play", this.skin);
 		this.multiplayer = new TextButton("Multiplayer", this.skin);
 		this.connect = new TextButton("Connect", this.skin);
 		this.exit = new TextButton("Exit", this.skin);
@@ -68,18 +68,18 @@ public class MainTitleMenu {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.log("MainTitleScreen.java", "Starting Server Socket");
+				ServerSocketHints serverSocketHints = new ServerSocketHints();
+				serverSocketHints.acceptTimeout = 0;
 				ServerSocket server = Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost",
 						8080,
-						new ServerSocketHints());
+						serverSocketHints);
 
 				Gdx.app.log("MainTitleScreen.java", "Waiting for connection");
 				Socket socket = server.accept(new SocketHints());
 				Gdx.app.log("MainTitleScreen.java", "client connected");
-				OutputStream outputStream = socket.getOutputStream();
-				InputStream inputStream = socket.getInputStream();
 
-				game.setServerDataInputStream(inputStream);
-				game.setServerDataOutputStream(outputStream);
+				game.setServerDataInputStream(socket.getInputStream());
+				game.setServerDataOutputStream(socket.getOutputStream());
 				game.setIsServer(true);
 				game.setScreen(game.getGameScreen());
 			}
