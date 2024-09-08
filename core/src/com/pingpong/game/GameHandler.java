@@ -134,8 +134,13 @@ public class GameHandler extends Game {
     }
 
     public void dispose() {
-        batch.dispose();
-        font.dispose();
+        Gdx.app.log("GameHandler.java", "dispose method");
+        this.batch.dispose();
+        this.font.dispose();
+        this.stage.dispose();
+        this.music.dispose();
+        this.closeDataStreams();
+
     }
 
     public SpriteBatch getBatch() {
@@ -395,6 +400,39 @@ public class GameHandler extends Game {
 
     public void setIsServer(boolean b) {
         this.isServer = b;
+    }
+
+    public void closeDataStreams() {
+        this.closeServerDataStream();
+        this.closeClientDataStream();
+    }
+
+    public void closeServerDataStream() {
+        if (this.isServer) {
+            try {
+                if (this.serverDataInputStream != null) {
+                    this.serverDataInputStream.close();
+                    this.serverDataOutputStream.close();
+                }
+            } catch (IOException e) {
+                Gdx.app.log("GameHandler.java", "Error closing DataStreams", e);
+            }
+        }
+    }
+
+    public void closeClientDataStream() {
+
+        if (!this.isServer) {
+            try {
+                if (this.clientDataInputStream != null) {
+                    this.clientDataInputStream.close();
+                    this.clientDataOutputStream.close();
+                }
+            } catch (IOException e) {
+                Gdx.app.log("GameHandler.java", "Error closing client DataStreams", e);
+            }
+        }
+
     }
 
     public void updateMultiplayerCommunication() {
