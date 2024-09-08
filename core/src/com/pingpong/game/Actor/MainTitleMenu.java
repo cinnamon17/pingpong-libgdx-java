@@ -19,9 +19,8 @@ import com.pingpong.game.GameHandler;
 /**
  * Menu buttons items
  */
-public class MainTitleMenu {
+public class MainTitleMenu extends Table {
 
-	private Table table;
 	private TextButton newGame;
 	private TextButton multiplayer;
 	private TextButton connect;
@@ -33,28 +32,26 @@ public class MainTitleMenu {
 
 		this.game = game;
 
-		this.table = new Table();
-		this.table.setFillParent(true);
-		this.game.getStage().addActor(table);
+		this.setFillParent(true);
 		this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
 		this.newGame = new TextButton("Play", this.skin);
 		this.multiplayer = new TextButton("Multiplayer", this.skin);
 		this.connect = new TextButton("Connect", this.skin);
 		this.exit = new TextButton("Exit", this.skin);
-		this.table.add(newGame).fillX().uniformX();
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(multiplayer).fillX().uniformX();
-		this.table.row();
-		this.table.add(connect).fillX().uniformX();
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(exit).fillX().uniformX();
+		this.add(newGame).fillX().uniformX();
+		this.row().pad(10, 0, 10, 0);
+		this.add(multiplayer).fillX().uniformX();
+		this.row();
+		this.add(connect).fillX().uniformX();
+		this.row().pad(10, 0, 10, 0);
+		this.add(exit).fillX().uniformX();
 
 	}
 
 	public void create() {
 
-		this.table.setVisible(true);
+		this.setVisible(true);
 		this.newGame.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -68,20 +65,27 @@ public class MainTitleMenu {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.log("MainTitleScreen.java", "Starting Server Socket");
+
 				ServerSocketHints serverSocketHints = new ServerSocketHints();
 				serverSocketHints.acceptTimeout = 0;
 				ServerSocket server = Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost",
 						8080,
 						serverSocketHints);
 
-				Gdx.app.log("MainTitleScreen.java", "Waiting for connection");
-				Socket socket = server.accept(new SocketHints());
-				Gdx.app.log("MainTitleScreen.java", "client connected");
-
-				game.setServerDataInputStream(socket.getInputStream());
-				game.setServerDataOutputStream(socket.getOutputStream());
-				game.setIsServer(true);
-				game.setScreen(game.getGameScreen());
+				Thread serverListener = new Thread() {
+					@Override
+					public void run() {
+						Gdx.app.log("MainTitleScreen.java", "Waiting for connection");
+						Socket socket = server.accept(new SocketHints());
+						Gdx.app.log("MainTitleScreen.java", "client connected");
+						game.setServerDataInputStream(socket.getInputStream());
+						game.setServerDataOutputStream(socket.getOutputStream());
+						game.setIsServer(true);
+						game.setScreen(game.getGameScreen());
+					}
+				};
+				serverListener.start();
+				game.setScreen(game.getServerScreen());
 			}
 
 		});
@@ -112,6 +116,6 @@ public class MainTitleMenu {
 	}
 
 	public void removeEventListeners() {
-		this.table.setVisible(false);
+		this.setVisible(false);
 	}
 }
