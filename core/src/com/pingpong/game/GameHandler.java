@@ -27,7 +27,9 @@ import com.pingpong.game.Dto.Data;
 import com.pingpong.game.Input.PaddleInputProcessor;
 import com.pingpong.game.Screen.GameScreen;
 import com.pingpong.game.Screen.MainTitleScreen;
+import com.pingpong.game.Screen.ServerScreen;
 import com.pingpong.game.Actor.MainTitleMenu;
+import com.pingpong.game.Actor.MultiplayerLabel;
 
 public class GameHandler extends Game {
 
@@ -36,11 +38,13 @@ public class GameHandler extends Game {
     private MainTitleScreen mainTitleScreen;
     private OrthographicCamera camera;
     private GameScreen gameScreen;
+    private ServerScreen serverScreen;
     private Music music;
     private Stage stage;
     private PaddleInputProcessor paddleInputProcessor;
     private InputMultiplexer inputMultiplexer;
     private MainTitleMenu mainTitleMenuButton;
+    private MultiplayerLabel multiplayerLabel;
     private TextureAtlas atlas;
     private Sprite paddleSprite;
     private Sprite paddleEnemySprite;
@@ -73,6 +77,7 @@ public class GameHandler extends Game {
         this.backgroundSprite = this.atlas.createSprite("background");
         this.camera.setToOrtho(false, 800, 480);
         this.gameScreen = new GameScreen(this);
+        this.serverScreen = new ServerScreen(this);
         this.mainTitleScreen = new MainTitleScreen(this);
         this.music = Gdx.audio.newMusic(Gdx.files.internal("mainMusic.wav"));
         this.stage = new Stage(new ScreenViewport());
@@ -82,6 +87,7 @@ public class GameHandler extends Game {
         this.inputMultiplexer.addProcessor(this.paddleInputProcessor);
         Gdx.input.setInputProcessor(this.inputMultiplexer);
         this.mainTitleMenuButton = new MainTitleMenu(this);
+        this.multiplayerLabel = new MultiplayerLabel();
         this.stage.addActor(paddle);
         this.stage.addActor(paddleEnemy);
         this.background = new Image(this.backgroundSprite);
@@ -92,6 +98,8 @@ public class GameHandler extends Game {
         this.score = new Score(this);
         this.stage.addActor(this.ball);
         this.stage.addActor(this.score);
+        this.stage.addActor(this.multiplayerLabel);
+        this.stage.addActor(this.mainTitleMenuButton);
         this.setScreen(mainTitleScreen);
         this.json = new Json();
         this.data = new Data();
@@ -105,12 +113,20 @@ public class GameHandler extends Game {
         return this.gameScreen;
     }
 
+    public ServerScreen getServerScreen() {
+        return this.serverScreen;
+    }
+
     public Stage getStage() {
         return this.stage;
     }
 
     public MainTitleMenu getMainTitleMenu() {
         return this.mainTitleMenuButton;
+    }
+
+    public MultiplayerLabel getMultiplayerLabel() {
+        return this.multiplayerLabel;
     }
 
     public void render() {

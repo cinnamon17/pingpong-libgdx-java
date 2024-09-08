@@ -17,43 +17,38 @@ public class ServerScreen implements Screen {
 
     @Override
     public void show() {
-        // TODO Auto-generated method stub
 
+        game.getMultiplayerLabel().setVisible(true);
     }
 
     @Override
     public void resize(int width, int height) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void render(float delta) {
-        // TODO Auto-generated method stub
-
+        game.stageDraw();
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
 
+        game.getMultiplayerLabel().setVisible(false);
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
 
     }
 
