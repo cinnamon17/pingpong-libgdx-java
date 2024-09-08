@@ -15,12 +15,8 @@ public class GameScreen implements Screen {
     public void show() {
 
         Gdx.app.log("GameScreen.java", "show");
-        game.setMusicLooping(true);
-        game.musicPlay();
-        game.setPaddleVisible();
-        game.setPaddleEnemyVisible();
-        game.setBallVisible();
-        game.setScoreVisible();
+        game.setMusic();
+        game.setMultiplayerActorsVisible();
     }
 
     @Override
@@ -46,41 +42,23 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
         game.musicPause();
-        game.setPaddleNoVisible();
-        game.setPaddleEnemyNoVisible();
-        game.setBallNoVisible();
-        game.setScoreNoVisible();
+        game.hideMultiplayerActors();
         Gdx.app.log("GameScreen.java", "hide");
     }
 
     @Override
     public void pause() {
         Gdx.app.log("GameScreen.java", "pause");
-        game.setPaddleNoVisible();
-        game.setPaddleEnemyNoVisible();
-        game.setBallNoVisible();
+        game.hideMultiplayerActors();
     }
 
     @Override
     public void render(float delta) {
 
-        game.clearScreen();
-        game.cameraUpdate();
-        game.setProjectionMatrixCombined();
-        game.stageDraw();
-        game.ballUpdate();
-        game.scoreUpdate();
-        game.paddleUpdate();
-
+        game.updateCamera();
+        game.updateActors();
         game.updateMultiplayerCommunication();
-        game.batchBegin();
-        game.batchDrawScore();
-        game.batchDrawBackground();
-        game.batchDrawPaddle();
-        game.batchDrawPaddleEnemy();
-        game.batchDrawBall();
-        game.batchEnd();
-
+        game.batchDrawMultiplayerActors();
         game.ballCheckCollision();
 
     }

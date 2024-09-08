@@ -207,8 +207,34 @@ public class GameHandler extends Game {
         this.stage.draw();
     }
 
+    public void updateCamera() {
+
+        this.clearScreen();
+        this.cameraUpdate();
+        this.setProjectionMatrixCombined();
+    }
+
+    public void updateActors() {
+
+        this.ballUpdate();
+        this.scoreUpdate();
+        this.paddleUpdate();
+    }
+
     public void stageDispose() {
         this.stage.dispose();
+    }
+
+    public void batchDrawMultiplayerActors() {
+
+        this.stageDraw();
+        this.batchBegin();
+        this.batchDrawScore();
+        this.batchDrawBackground();
+        this.batchDrawPaddle();
+        this.batchDrawPaddleEnemy();
+        this.batchDrawBall();
+        this.batchEnd();
     }
 
     public void createMainTitleButtonsEventListeners() {
@@ -278,6 +304,27 @@ public class GameHandler extends Game {
     public void ballCheckCollision() {
         this.ball.checkColision(this.paddle);
         this.ball.checkColision(this.paddleEnemy);
+    }
+
+    public void setMultiplayerActorsVisible() {
+
+        this.setPaddleVisible();
+        this.setPaddleEnemyVisible();
+        this.setBallVisible();
+        this.setScoreVisible();
+    }
+
+    public void hideMultiplayerActors() {
+
+        this.setPaddleNoVisible();
+        this.setPaddleEnemyNoVisible();
+        this.setBallNoVisible();
+        this.setScoreNoVisible();
+    }
+
+    public void setMusic() {
+        this.setMusicLooping(true);
+        this.musicPlay();
     }
 
     public void scoreUpdate() {
