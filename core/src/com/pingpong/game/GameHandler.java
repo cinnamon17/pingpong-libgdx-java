@@ -479,6 +479,8 @@ public class GameHandler extends Game {
     private void receiveClientDataAndUpdatePaddle() throws IOException {
         Data clientData = json.fromJson(Data.class, this.getServerDataInputStream().readUTF());
         this.getPaddleActorEnemy().setX(clientData.getClientPaddleX());
+        this.paddleEnemy.setIsLeftMoved(clientData.getClientPaddleIsLeftMoved());
+        this.paddleEnemy.setIsRightMoved(clientData.getClientPaddleIsRightMoved());
     }
 
     private void receiveServerDataAndUpdateClient() throws IOException {
@@ -491,6 +493,8 @@ public class GameHandler extends Game {
 
     private void updateClientData() {
         data.setClientPaddleX(this.getPaddleActor().getX());
+        data.setClientPaddleIsRightMoved(this.getPaddleActor().isRightMoved());
+        data.setClientPaddleIsLeftMoved(this.getPaddleActor().isLeftMoved());
     }
 
     private void sendClientDataToServer() throws IOException {

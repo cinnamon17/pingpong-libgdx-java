@@ -66,7 +66,6 @@ public class WindowInput extends Window {
                     game.setScreen(game.getGameScreen());
                 } catch (GdxRuntimeException e) {
                     Gdx.app.log("ClientScreen.java", "Error connecting to socket", e);
-                    // game.getWindowInput().newLabel("error ip not valid", new LabelStyle());
                     game.getWindowInput().title.setText("Ip not valid");
                     game.setScreen(game.getClientScreen());
                 }

@@ -13,6 +13,8 @@ public class Data {
     private float clientBallY;
     private int scoreEnemy;
     private int scorePlayer;
+    private boolean clientPaddleIsRightMoved;
+    private boolean clientPaddleIsLeftMoved;
 
     public float getClientBallX() {
         return clientBallX;
@@ -44,6 +46,14 @@ public class Data {
 
     public int getScoreEnemy() {
         return scoreEnemy;
+    }
+
+    public boolean getClientPaddleIsRightMoved() {
+        return this.clientPaddleIsRightMoved;
+    }
+
+    public boolean getClientPaddleIsLeftMoved() {
+        return this.clientPaddleIsLeftMoved;
     }
 
     public void setClientBallX(float clientBallX) {
@@ -78,4 +88,11 @@ public class Data {
         this.scorePlayer = scorePlayer;
     }
 
+    public void setClientPaddleIsLeftMoved(boolean clientPaddleIsLeftMoved) {
+        this.clientPaddleIsLeftMoved = clientPaddleIsLeftMoved;
+    }
+
+    public void setClientPaddleIsRightMoved(boolean clientPaddleIsRightMoved) {
+        this.clientPaddleIsRightMoved = clientPaddleIsRightMoved;
+    }
 }

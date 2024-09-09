@@ -66,4 +66,13 @@ public class Paddle extends Image {
     public boolean isRightMoved() {
         return this.rightMove;
     }
+
+    public void setIsRightMoved(boolean b) {
+        this.rightMove = b;
+    }
+
+    public void setIsLeftMoved(boolean b) {
+        this.leftMove = b;
+    }
+
 }
