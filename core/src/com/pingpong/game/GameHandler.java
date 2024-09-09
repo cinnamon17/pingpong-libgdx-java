@@ -50,8 +50,6 @@ public class GameHandler extends Game {
     private Sprite paddleEnemySprite;
     private Sprite ballSprite;
     private Sprite backgroundSprite;
-    private int scorePlayer = 0;
-    private int scoreEnemy = 0;
     private Paddle paddle;
     private Paddle paddleEnemy;
     private Image background;
@@ -95,7 +93,7 @@ public class GameHandler extends Game {
         this.background.setZIndex(0);
         this.background.setPosition(0, 0);
         this.ball = new Ball(this.ballSprite);
-        this.score = new Score(this);
+        this.score = new Score();
         this.stage.addActor(this.ball);
         this.stage.addActor(this.score);
         this.stage.addActor(this.multiplayerLabel);
@@ -266,22 +264,6 @@ public class GameHandler extends Game {
         this.mainTitleMenuButton.removeEventListeners();
     }
 
-    public int getScorePlayer() {
-        return this.scorePlayer;
-    }
-
-    public int getScoreEnemy() {
-        return this.scoreEnemy;
-    }
-
-    public void setScorePlayer(int score) {
-        this.scorePlayer = score;
-    }
-
-    public void setScoreEnemy(int score) {
-        this.scoreEnemy = score;
-    }
-
     public Paddle getPaddleActor() {
         return this.paddle;
     }
@@ -351,12 +333,12 @@ public class GameHandler extends Game {
     public void scoreUpdate() {
 
         if (this.ball.isBallTouchingTopOfScreen()) {
-            this.scorePlayer++;
+            this.score.incrementScorePlayer();
             this.ball.setPosition(400, 260);
         }
 
         if (this.ball.isBallTouchingBottomOfScreen()) {
-            this.scoreEnemy++;
+            this.score.incrementScoreEnemy();
             this.ball.setPosition(400, 260);
         }
         this.score.update();
@@ -394,7 +376,7 @@ public class GameHandler extends Game {
         return clientDataOutputStream;
     }
 
-    public boolean getIsServer() {
+    public boolean isServer() {
         return this.isServer;
     }
 
@@ -402,42 +384,9 @@ public class GameHandler extends Game {
         this.isServer = b;
     }
 
-    public void closeDataStreams() {
-        this.closeServerDataStream();
-        this.closeClientDataStream();
-    }
-
-    public void closeServerDataStream() {
-        if (this.isServer) {
-            try {
-                if (this.serverDataInputStream != null) {
-                    this.serverDataInputStream.close();
-                    this.serverDataOutputStream.close();
-                }
-            } catch (IOException e) {
-                Gdx.app.log("GameHandler.java", "Error closing DataStreams", e);
-            }
-        }
-    }
-
-    public void closeClientDataStream() {
-
-        if (!this.isServer) {
-            try {
-                if (this.clientDataInputStream != null) {
-                    this.clientDataInputStream.close();
-                    this.clientDataOutputStream.close();
-                }
-            } catch (IOException e) {
-                Gdx.app.log("GameHandler.java", "Error closing client DataStreams", e);
-            }
-        }
-
-    }
-
     public void updateMultiplayerCommunication() {
         try {
-            if (this.getIsServer()) {
+            if (this.isServer()) {
                 this.handleServerSideCommunication();
             } else {
                 this.handleClientSideCommunication();
@@ -445,6 +394,39 @@ public class GameHandler extends Game {
         } catch (IOException e) {
             this.logError(e);
         }
+    }
+
+    public void closeDataStreams() {
+
+        if (this.isServer()) {
+            this.closeServerDataStream();
+        } else {
+            this.closeClientDataStream();
+        }
+    }
+
+    public void closeServerDataStream() {
+        try {
+            if (this.serverDataInputStream != null) {
+                this.serverDataInputStream.close();
+                this.serverDataOutputStream.close();
+            }
+        } catch (IOException e) {
+            Gdx.app.log("GameHandler.java", "Error closing DataStreams", e);
+        }
+    }
+
+    public void closeClientDataStream() {
+
+        try {
+            if (this.clientDataInputStream != null) {
+                this.clientDataInputStream.close();
+                this.clientDataOutputStream.close();
+            }
+        } catch (IOException e) {
+            Gdx.app.log("GameHandler.java", "Error closing client DataStreams", e);
+        }
+
     }
 
     private void handleServerSideCommunication() throws IOException {
@@ -463,8 +445,8 @@ public class GameHandler extends Game {
         data.setServerPaddleX(this.paddle.getX());
         data.setServerBallX(this.ball.getX());
         data.setServerBallY(calculateServerBallY());
-        data.setScorePlayer(this.getScorePlayer());
-        data.setScoreEnemy(this.getScoreEnemy());
+        data.setScorePlayer(this.score.getScorePlayer());
+        data.setScoreEnemy(this.score.getScoreEnemy());
     }
 
     private float calculateServerBallY() {
@@ -484,8 +466,8 @@ public class GameHandler extends Game {
         Data serverData = json.fromJson(Data.class, this.getClientDataInputStream().readUTF());
         this.getPaddleActorEnemy().setX(serverData.getServerPaddleX());
         this.getBallActor().setPosition(serverData.getServerBallX(), serverData.getServerBallY());
-        this.setScoreEnemy(serverData.getScoreEnemy());
-        this.setScorePlayer(serverData.getScorePlayer());
+        this.score.setScoreEnemy(serverData.getScoreEnemy());
+        this.score.setScorePlayer(serverData.getScorePlayer());
     }
 
     private void updateClientData() {

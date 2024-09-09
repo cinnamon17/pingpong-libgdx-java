@@ -9,11 +9,11 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.pingpong.game.GameHandler;
 
 /**
@@ -36,6 +36,7 @@ public class MainTitleMenu extends Table {
 		this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
 		this.newGame = new TextButton("Play", this.skin);
+		this.newGame.setDisabled(true);
 		this.multiplayer = new TextButton("Multiplayer", this.skin);
 		this.connect = new TextButton("Connect", this.skin);
 		this.exit = new TextButton("Exit", this.skin);
@@ -52,18 +53,18 @@ public class MainTitleMenu extends Table {
 	public void create() {
 
 		this.setVisible(true);
-		this.newGame.addListener(new ClickListener() {
+		this.newGame.addListener(new ChangeListener() {
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.log("MainTitleScreen.java", "new game button pressed");
 				game.setScreen(game.getGameScreen());
 			}
 
 		});
 
-		this.multiplayer.addListener(new ClickListener() {
+		this.multiplayer.addListener(new ChangeListener() {
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.log("MainTitleScreen.java", "Starting Server Socket");
 
 				ServerSocketHints serverSocketHints = new ServerSocketHints();
@@ -82,6 +83,9 @@ public class MainTitleMenu extends Table {
 						game.setServerDataOutputStream(socket.getOutputStream());
 						game.setIsServer(true);
 						game.setScreen(game.getGameScreen());
+						newGame.setDisabled(false);
+						connect.setDisabled(true);
+						multiplayer.setDisabled(true);
 					}
 				};
 				serverListener.start();
@@ -90,9 +94,9 @@ public class MainTitleMenu extends Table {
 
 		});
 
-		this.connect.addListener(new ClickListener() {
+		this.connect.addListener(new ChangeListener() {
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.log("MainTitleScreen.java", "connecting to server");
 				Socket socket = Gdx.net.newClientSocket(Net.Protocol.TCP, "localhost", 8080,
 						new SocketHints());
@@ -102,13 +106,16 @@ public class MainTitleMenu extends Table {
 
 				game.setClientDataInputStream(inputStream);
 				game.setClientDataOutputStream(outputStream);
+				newGame.setDisabled(false);
+				connect.setDisabled(true);
+				multiplayer.setDisabled(true);
 				game.setScreen(game.getGameScreen());
 			}
 
 		});
-		this.exit.addListener(new ClickListener() {
+		this.exit.addListener(new ChangeListener() {
 			@Override
-			public void clicked(InputEvent event, float x, float y) {
+			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.log("MainTitleScreen.java", "exit button pressed");
 				Gdx.app.exit();
 			}
