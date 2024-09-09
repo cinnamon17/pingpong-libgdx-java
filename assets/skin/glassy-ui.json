@@ -38,6 +38,12 @@ com.badlogic.gdx.graphics.Color: {
 		b: 0.34509805
 		a: 1
 	}
+	RGBA_209_209_209_255: {
+		r: 0.81960785
+		g: 0.81960785
+		b: 0.81960785
+		a: 1
+	}
 	RGBA_219_211_216_255: {
 		r: 0.36862746
 		g: 0.36862746
@@ -182,8 +188,10 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		font: font-big
 		fontColor: RGBA_219_211_216_255
 		overFontColor: RGBA_138_88_88_255
+		disabledFontColor: RGBA_209_209_209_255
 		up: button-up
 		down: button-down
+		disabled: button-disable
 	}
 	small: {
 		font: font
