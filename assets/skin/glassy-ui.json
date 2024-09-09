@@ -111,6 +111,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: font-big
 		fontColor: white
 	}
+	big-black: {
+		font: font-big
+		fontColor: RGBA_219_211_216_255
+	}
 	black: {
 		font: font
 		fontColor: black
