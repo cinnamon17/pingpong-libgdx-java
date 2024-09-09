@@ -1,8 +1,5 @@
 package com.pingpong.game.Actor;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.Net;
@@ -97,19 +94,10 @@ public class MainTitleMenu extends Table {
 		this.connect.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				Gdx.app.log("MainTitleScreen.java", "connecting to server");
-				Socket socket = Gdx.net.newClientSocket(Net.Protocol.TCP, "localhost", 8080,
-						new SocketHints());
-				Gdx.app.log("MainTitleScreen.java", "connected successfully");
-				OutputStream outputStream = socket.getOutputStream();
-				InputStream inputStream = socket.getInputStream();
-
-				game.setClientDataInputStream(inputStream);
-				game.setClientDataOutputStream(outputStream);
 				newGame.setDisabled(false);
 				connect.setDisabled(true);
 				multiplayer.setDisabled(true);
-				game.setScreen(game.getGameScreen());
+				game.setScreen(game.getClientScreen());
 			}
 
 		});
@@ -125,4 +113,17 @@ public class MainTitleMenu extends Table {
 	public void removeEventListeners() {
 		this.setVisible(false);
 	}
+
+	public TextButton getnewGameButton() {
+		return this.newGame;
+	}
+
+	public TextButton getConnect() {
+		return connect;
+	}
+
+	public TextButton getMultiplayer() {
+		return multiplayer;
+	}
+
 }

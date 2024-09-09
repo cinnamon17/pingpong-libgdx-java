@@ -23,8 +23,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.pingpong.game.Actor.Ball;
 import com.pingpong.game.Actor.Paddle;
 import com.pingpong.game.Actor.Score;
+import com.pingpong.game.Actor.WindowInput;
 import com.pingpong.game.Dto.Data;
 import com.pingpong.game.Input.PaddleInputProcessor;
+import com.pingpong.game.Screen.ClientScreen;
 import com.pingpong.game.Screen.GameScreen;
 import com.pingpong.game.Screen.MainTitleScreen;
 import com.pingpong.game.Screen.ServerScreen;
@@ -39,12 +41,14 @@ public class GameHandler extends Game {
     private OrthographicCamera camera;
     private GameScreen gameScreen;
     private ServerScreen serverScreen;
+    private ClientScreen clientScreen;
     private Music music;
     private Stage stage;
     private PaddleInputProcessor paddleInputProcessor;
     private InputMultiplexer inputMultiplexer;
     private MainTitleMenu mainTitleMenuButton;
     private MultiplayerLabel multiplayerLabel;
+    private WindowInput windowInput;
     private TextureAtlas atlas;
     private Sprite paddleSprite;
     private Sprite paddleEnemySprite;
@@ -77,6 +81,7 @@ public class GameHandler extends Game {
         this.gameScreen = new GameScreen(this);
         this.serverScreen = new ServerScreen(this);
         this.mainTitleScreen = new MainTitleScreen(this);
+        this.clientScreen = new ClientScreen(this);
         this.music = Gdx.audio.newMusic(Gdx.files.internal("mainMusic.wav"));
         this.stage = new Stage(new ScreenViewport());
         this.paddleInputProcessor = new PaddleInputProcessor(this, this.paddle);
@@ -86,6 +91,7 @@ public class GameHandler extends Game {
         Gdx.input.setInputProcessor(this.inputMultiplexer);
         this.mainTitleMenuButton = new MainTitleMenu(this);
         this.multiplayerLabel = new MultiplayerLabel();
+        this.windowInput = new WindowInput(this);
         this.stage.addActor(paddle);
         this.stage.addActor(paddleEnemy);
         this.background = new Image(this.backgroundSprite);
@@ -98,6 +104,7 @@ public class GameHandler extends Game {
         this.stage.addActor(this.score);
         this.stage.addActor(this.multiplayerLabel);
         this.stage.addActor(this.mainTitleMenuButton);
+        this.stage.addActor(this.windowInput);
         this.setScreen(mainTitleScreen);
         this.json = new Json();
         this.data = new Data();
@@ -115,6 +122,10 @@ public class GameHandler extends Game {
         return this.serverScreen;
     }
 
+    public ClientScreen getClientScreen() {
+        return clientScreen;
+    }
+
     public Stage getStage() {
         return this.stage;
     }
@@ -125,6 +136,14 @@ public class GameHandler extends Game {
 
     public MultiplayerLabel getMultiplayerLabel() {
         return this.multiplayerLabel;
+    }
+
+    public WindowInput getWindowInput() {
+        return windowInput;
+    }
+
+    public void setWindowInput(WindowInput windowInput) {
+        this.windowInput = windowInput;
     }
 
     public void render() {
