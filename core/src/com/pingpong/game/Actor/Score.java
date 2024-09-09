@@ -4,26 +4,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.pingpong.game.GameHandler;
 
 /**
  * Score
  */
 public class Score extends Table {
-	private GameHandler game;
 	private Skin skin;
 	private Label playerScore;
 	private Label enemyScore;
+	private int scorePlayer = 0;
+	private int scoreEnemy = 0;
 
-	public Score(final GameHandler game) {
+	public Score() {
 		super();
-		this.game = game;
 		this.setPosition(0, 90);
 		this.setVisible(false);
 		this.setFillParent(true);
 		this.skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-		this.playerScore = new Label("Player: " + this.game.getScorePlayer(), this.skin);
-		this.enemyScore = new Label("Enemy: " + this.game.getScoreEnemy(), this.skin);
+		this.playerScore = new Label("Player: " + this.scorePlayer, this.skin);
+		this.enemyScore = new Label("Enemy: " + this.scoreEnemy, this.skin);
 		this.add(playerScore).fillX().uniformX();
 		this.row().pad(10, 0, 10, 0);
 		this.add(enemyScore).fillX().uniformX();
@@ -32,7 +31,32 @@ public class Score extends Table {
 
 	public void update() {
 
-		this.playerScore.setText("Player: " + this.game.getScorePlayer());
-		this.enemyScore.setText("Enemy: " + this.game.getScoreEnemy());
+		this.playerScore.setText("Player: " + this.scorePlayer);
+		this.enemyScore.setText("Enemy: " + this.scoreEnemy);
 	}
+
+	public void setScorePlayer(int scorePlayer) {
+		this.scorePlayer = scorePlayer;
+	}
+
+	public void setScoreEnemy(int scoreEnemy) {
+		this.scoreEnemy = scoreEnemy;
+	}
+
+	public int getScorePlayer() {
+		return scorePlayer;
+	}
+
+	public int getScoreEnemy() {
+		return scoreEnemy;
+	}
+
+	public void incrementScorePlayer() {
+		this.scorePlayer++;
+	}
+
+	public void incrementScoreEnemy() {
+		this.scoreEnemy++;
+	}
+
 }
