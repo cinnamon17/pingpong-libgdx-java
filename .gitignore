@@ -141,6 +141,8 @@ www-test/
 /server/nbdist/
 /shared/nbdist/
 
+/bin
+
 nbactions.xml
 nb-configuration.xml
 
