@@ -16,7 +16,16 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '8'  # Note: Java 8 is outdated for modern LibGDX. Use 11+ if possible.
+          java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -29,9 +38,6 @@ jobs:
 
       - name: Build Windows Version
         run: ./gradlew lwjgl3:packageWinX64
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
 
       - name: Build Android Debug app
         run: ./gradlew android:assembleDebug
